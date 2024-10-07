@@ -9,7 +9,11 @@ public:
 
 	virtual void LateUpdate() override;
 
+	void KeyboardInput();
+	void MouseInput();
+
 private:
 	float		_speed = 100.f;
+	POINT		m_ptOldCursorPos;
 };
 
