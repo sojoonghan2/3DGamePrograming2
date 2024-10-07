@@ -143,7 +143,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 	shared_ptr<Scene> scene = make_shared<Scene>();
 
-#pragma region FBX
+#pragma region FBX & Camera
 	{
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Dragon.fbx");
 
@@ -159,16 +159,13 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObjects[i]->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
 			scene->AddGameObject(gameObjects[i]);
 		}
-	}
-#pragma endregion
 
-#pragma region Camera
-	{
 		shared_ptr<GameObject> camera = make_shared<GameObject>();
 		camera->SetName(L"Main_Camera");
 		camera->AddComponent(make_shared<TestCameraScript>());
 		camera->AddComponent(make_shared<Transform>());
 		camera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, FOV=45µµ
+		//camera->GetTransform()->SetParent(gameObjects[0]->GetTransform());
 		camera->GetCamera()->SetFar(10000.f);
 		camera->GetTransform()->SetLocalPosition(Vec3(1000.f, 100.f, 0.f));
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
