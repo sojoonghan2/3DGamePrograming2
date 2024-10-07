@@ -2,63 +2,69 @@
 
 enum class KEY_TYPE
 {
-	UP = VK_UP,
-	DOWN = VK_DOWN,
-	LEFT = VK_LEFT,
-	RIGHT = VK_RIGHT,
+    UP = VK_UP,
+    DOWN = VK_DOWN,
+    LEFT = VK_LEFT,
+    RIGHT = VK_RIGHT,
 
-	W = 'W',
-	A = 'A',
-	S = 'S',
-	D = 'D',
+    W = 'W',
+    A = 'A',
+    S = 'S',
+    D = 'D',
 
-	Q = 'Q',
-	E = 'E',
-	Z = 'Z',
-	C = 'C',
+    Q = 'Q',
+    E = 'E',
+    Z = 'Z',
+    C = 'C',
 
-	LBUTTON = VK_LBUTTON,
-	RBUTTON = VK_RBUTTON,
+    LBUTTON = VK_LBUTTON,
+    RBUTTON = VK_RBUTTON,
 };
 
 enum class KEY_STATE
 {
-	NONE,
-	PRESS,
-	DOWN,
-	UP,
-	END
+    NONE,
+    PRESS,
+    DOWN,
+    UP,
+    END
 };
 
 enum
 {
-	KEY_TYPE_COUNT = static_cast<int32>(UINT8_MAX + 1),
-	KEY_STATE_COUNT = static_cast<int32>(KEY_STATE::END),
+    KEY_TYPE_COUNT = static_cast<int32>(UINT8_MAX + 1),
+    KEY_STATE_COUNT = static_cast<int32>(KEY_STATE::END),
 };
 
 class Input
 {
-	DECLARE_SINGLE(Input);
+    DECLARE_SINGLE(Input);
 
 public:
-	void Init(HWND hwnd);
-	void Update();
+    void Init(HWND hwnd);
+    void Update();
 
-	// 누르고 있을 때
-	bool GetButton(KEY_TYPE key) { return GetState(key) == KEY_STATE::PRESS; }
-	// 맨 처음 눌렀을 때
-	bool GetButtonDown(KEY_TYPE key) { return GetState(key) == KEY_STATE::DOWN; }
-	// 맨 처음 눌렀다 뗐을 때
-	bool GetButtonUp(KEY_TYPE key) { return GetState(key) == KEY_STATE::UP; }
+    // 누르고 있을 때
+    bool GetButton(KEY_TYPE key) { return GetState(key) == KEY_STATE::PRESS; }
+    // 맨 처음 눌렀을 때
+    bool GetButtonDown(KEY_TYPE key) { return GetState(key) == KEY_STATE::DOWN; }
+    // 맨 처음 눌렀다 뗐을 때
+    bool GetButtonUp(KEY_TYPE key) { return GetState(key) == KEY_STATE::UP; }
 
-	const POINT& GetMousePos() { return _mousePos; }
+    const POINT& GetMousePos() { return _mousePos; }
+
+    // 마우스 델타 반환
+    POINT GetMouseDelta() const { return _mouseDelta; }
 
 private:
-	inline KEY_STATE GetState(KEY_TYPE key) { return _states[static_cast<uint8>(key)]; }
+    inline KEY_STATE GetState(KEY_TYPE key) { return _states[static_cast<uint8>(key)]; }
 
 private:
-	HWND _hwnd;
-	vector<KEY_STATE> _states;
-	POINT _mousePos = {};
+    HWND _hwnd;
+    vector<KEY_STATE> _states;
+
+    POINT _mousePos = {};      // 현재 마우스 위치
+    POINT _prevMousePos = {};  // 이전 프레임의 마우스 위치
+    POINT _mouseDelta = {};    // 마우스 이동량 (델타)
 };
 

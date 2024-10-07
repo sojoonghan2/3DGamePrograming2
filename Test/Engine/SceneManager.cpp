@@ -143,31 +143,38 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 	shared_ptr<Scene> scene = make_shared<Scene>();
 
+	shared_ptr<GameObject> mainObject = make_shared<GameObject>();
+	mainObject->SetName(L"Main_Object");
+	mainObject->AddComponent(make_shared<Transform>());
+	mainObject->AddComponent(make_shared<TestPlayerScript>());
+	mainObject->GetTransform()->SetLocalPosition(Vec3(1000.f, 70.f, 100.f));
+	scene->AddGameObject(mainObject);
+
 #pragma region FBX & Camera
 	{
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Dragon.fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-		// gameObject[3] -> 미사일
-		for (int i{}; i < 3; ++i) {
-			gameObjects[i]->SetName(L"Dragon");
-			gameObjects[i]->AddComponent(make_shared<TestPlayerScript>());
-			gameObjects[i]->SetCheckFrustum(false);
-			gameObjects[i]->GetTransform()->SetLocalPosition(Vec3(1000.f, 70.f, 100.f));
-			gameObjects[i]->GetTransform()->SetLocalRotation(Vec3(-1.5708f, 3.14159f, 0.f));
-			gameObjects[i]->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
-			scene->AddGameObject(gameObjects[i]);
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Dragon");
+			gameObject->GetTransform()->SetParent(mainObject->GetTransform());
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, -30.f, 100.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.54f, 3.1415f, 0.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
+			scene->AddGameObject(gameObject);
 		}
 
 		shared_ptr<GameObject> camera = make_shared<GameObject>();
 		camera->SetName(L"Main_Camera");
-		camera->AddComponent(make_shared<TestCameraScript>());
 		camera->AddComponent(make_shared<Transform>());
 		camera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, FOV=45도
-		//camera->GetTransform()->SetParent(gameObjects[0]->GetTransform());
+		camera->GetTransform()->SetParent(mainObject->GetTransform());
 		camera->GetCamera()->SetFar(10000.f);
-		camera->GetTransform()->SetLocalPosition(Vec3(1000.f, 100.f, 0.f));
+		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, -30.f));
+
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
 		scene->AddGameObject(camera);
@@ -292,10 +299,10 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	{
 		shared_ptr<GameObject> light = make_shared<GameObject>();
 		light->AddComponent(make_shared<Transform>());
-		light->GetTransform()->SetLocalPosition(Vec3(0, 1000, 500));
 		light->AddComponent(make_shared<Light>());
 		light->GetLight()->SetLightDirection(Vec3(0, -1, 1.f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
+		light->GetTransform()->SetParent(mainObject->GetTransform());
 		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
 		light->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));
