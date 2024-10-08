@@ -162,18 +162,19 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->GetTransform()->SetParent(mainObject->GetTransform());
 			gameObject->SetCheckFrustum(false);
 			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, -30.f, 100.f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(-1.54f, 3.1415f, 0.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
 			scene->AddGameObject(gameObject);
 		}
 
 		shared_ptr<GameObject> camera = make_shared<GameObject>();
 		camera->SetName(L"Main_Camera");
+		mainObject->AddComponent(make_shared<TestCameraScript>());
 		camera->AddComponent(make_shared<Transform>());
 		camera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, FOV=45도
-		camera->GetTransform()->SetParent(mainObject->GetTransform());
+		camera->GetTransform()->SetParent(gameObjects[0]->GetTransform());
+		camera->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 		camera->GetCamera()->SetFar(10000.f);
-		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, -30.f));
+		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 10.f, -30.f));
 
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
