@@ -5,6 +5,7 @@
 
 // °¢Á¾ include
 #include <windows.h>
+#include <iostream>
 #include <tchar.h>
 #include <memory>
 #include <string>

@@ -7,14 +7,8 @@
 #include "Timer.h"
 #include "SceneManager.h"
 
-TestCameraScript::TestCameraScript()
-{
-}
+TestCameraScript::TestCameraScript() {}
 
-TestCameraScript::~TestCameraScript()
-{
-}
+TestCameraScript::~TestCameraScript() {}
 
-void TestCameraScript::LateUpdate()
-{
-}
+void TestCameraScript::LateUpdate() {}

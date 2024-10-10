@@ -11,6 +11,8 @@ public:
 
 	virtual void FinalUpdate() override;
 
+	float GetHeightAtPosition(float xPos, float yPos);
+
 private:
 	int32 _sizeX = 15;
 	int32 _sizeZ = 15;

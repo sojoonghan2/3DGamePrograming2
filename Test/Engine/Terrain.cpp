@@ -56,3 +56,13 @@ void Terrain::FinalUpdate()
 	Vec3 pos = mainCamera->GetTransform()->GetLocalPosition();
 	_material->SetVec4(0, Vec4(pos.x, pos.y, pos.z, 0));
 }
+
+float Terrain::GetHeightAtPosition(float x, float z) {
+	float u = x / _sizeX;
+	float v = z / _sizeZ;
+
+	// 높이값을 샘플링
+	// Todo: 하이트맵에 접근 어떻게?
+	//return _heightMapTexture->Sample(u, v);
+	return false;
+}

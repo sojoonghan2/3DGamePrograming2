@@ -16,6 +16,7 @@
 #include "ParticleSystem.h"
 #include "Terrain.h"
 #include "SphereCollider.h"
+#include "BoxCollider.h"
 #include "MeshData.h"
 
 void SceneManager::Update()
@@ -160,9 +161,12 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Dragon");
 			gameObject->GetTransform()->SetParent(mainObject->GetTransform());
+			gameObject->AddComponent(make_shared<BoxCollider>());
 			gameObject->SetCheckFrustum(false);
 			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, -30.f, 100.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
+			dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
+			dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(0.5f, 0.5f, 0.5f));
 			scene->AddGameObject(gameObject);
 		}
 
