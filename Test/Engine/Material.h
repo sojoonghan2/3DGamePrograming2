@@ -63,6 +63,8 @@ public:
 
 	shared_ptr<Material> Clone();
 
+	shared_ptr<Texture> GetTexture(uint8 index) const { return _textures[index]; }
+
 private:
 	shared_ptr<Shader>	_shader;
 	MaterialParams		_params;

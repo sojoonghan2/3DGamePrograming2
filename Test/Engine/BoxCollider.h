@@ -13,6 +13,9 @@ public:
 	void SetExtents(Vec3 extents) { _extents = extents; }
 	void SetCenter(Vec3 center) { _center = center; }
 
+	Vec3 GetRadius() { return _extents; }
+	Vec3 GetCenter() { return _center; }
+
 private:
 	// Local ±âÁØ
 	Vec3		_extents = Vec3(0, 0, 0);

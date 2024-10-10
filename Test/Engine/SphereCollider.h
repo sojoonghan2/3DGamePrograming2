@@ -13,6 +13,9 @@ public:
 	void SetRadius(float radius) { _radius = radius; }
 	void SetCenter(Vec3 center) { _center = center; }
 
+	float GetRadius() { return _radius; }
+	Vec3 GetCenter() { return _center; }
+
 private:
 	// Local ±âÁØ
 	float		_radius = 1.f;

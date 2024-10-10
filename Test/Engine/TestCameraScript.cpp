@@ -11,4 +11,29 @@ TestCameraScript::TestCameraScript() {}
 
 TestCameraScript::~TestCameraScript() {}
 
-void TestCameraScript::LateUpdate() {}
+void TestCameraScript::LateUpdate()
+{
+	Vec3 pos = GetTransform()->GetLocalPosition();
+
+	if (INPUT->GetButton(KEY_TYPE::I))
+		pos += nmz(GetTransform()->GetLook()) * _speed * DELTA_TIME;
+
+	if (INPUT->GetButton(KEY_TYPE::K))
+		pos -= nmz(GetTransform()->GetLook()) * _speed * DELTA_TIME;
+
+	if (INPUT->GetButton(KEY_TYPE::J))
+		pos -= nmz(GetTransform()->GetRight()) * _speed * DELTA_TIME;
+
+	if (INPUT->GetButton(KEY_TYPE::L))
+		pos += nmz(GetTransform()->GetRight()) * _speed * DELTA_TIME;
+
+	//std::cout << "xPos: " << pos.x << "yPos: " << pos.y << "zPos: " << pos.z << "\n";
+
+	if (INPUT->GetButtonDown(KEY_TYPE::RBUTTON))
+	{
+		const POINT& pos2 = INPUT->GetMousePos();
+		GET_SINGLE(SceneManager)->Pick(pos2.x, pos2.y);
+	}
+
+	GetTransform()->SetLocalPosition(pos);
+}
