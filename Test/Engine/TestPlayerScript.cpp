@@ -60,4 +60,9 @@ void TestPlayerScript::MouseInput()
 		// 회전값을 다시 설정
 		GetTransform()->SetLocalRotation(rotation);
 	}
+	if (INPUT->GetButtonDown(KEY_TYPE::RBUTTON))
+	{
+		const POINT& pos2 = INPUT->GetMousePos();
+		GET_SINGLE(SceneManager)->Pick(pos2.x, pos2.y);
+	}
 }

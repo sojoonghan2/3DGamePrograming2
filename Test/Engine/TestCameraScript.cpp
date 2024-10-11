@@ -27,13 +27,5 @@ void TestCameraScript::LateUpdate()
 	if (INPUT->GetButton(KEY_TYPE::L))
 		pos += nmz(GetTransform()->GetRight()) * _speed * DELTA_TIME;
 
-	//std::cout << "xPos: " << pos.x << "yPos: " << pos.y << "zPos: " << pos.z << "\n";
-
-	if (INPUT->GetButtonDown(KEY_TYPE::RBUTTON))
-	{
-		const POINT& pos2 = INPUT->GetMousePos();
-		GET_SINGLE(SceneManager)->Pick(pos2.x, pos2.y);
-	}
-
 	GetTransform()->SetLocalPosition(pos);
 }

@@ -110,9 +110,10 @@ shared_ptr<GameObject> SceneManager::Pick(int32 screenX, int32 screenY)
 		{
 			minDistance = distance;
 			picked = gameObject;
+			
 		}
 	}
-
+	if (picked) std::cout << "Pick!" << "\n";
 	return picked;
 }
 
