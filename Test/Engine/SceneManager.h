@@ -22,7 +22,7 @@ public:
 
 	shared_ptr<class GameObject> Pick(int32 screenX, int32 screenY);
 
-	bool CollitionPlayerByObject(shared_ptr<GameObject> obj1, shared_ptr<GameObject> obj2);
+	shared_ptr<GameObject> Collition(shared_ptr<GameObject> obj);
 
 public:
 	shared_ptr<Scene> GetActiveScene() { return _activeScene; }

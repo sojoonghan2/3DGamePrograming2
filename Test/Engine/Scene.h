@@ -12,6 +12,7 @@ public:
 	void LateUpdate();
 	void FinalUpdate();
 
+
 	shared_ptr<class Camera> GetMainCamera();
 
 	void Render();
@@ -36,6 +37,7 @@ public:
 
 private:
 	vector<shared_ptr<GameObject>>		_gameObjects;
+
 	vector<shared_ptr<class Camera>>	_cameras;
 	vector<shared_ptr<class Light>>		_lights;
 };

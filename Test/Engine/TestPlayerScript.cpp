@@ -19,6 +19,11 @@ void TestPlayerScript::LateUpdate()
 {
 	KeyboardInput();
 	MouseInput();
+
+	if (GET_SINGLE(SceneManager)->Collition(GetGameObject()))
+	{
+		std::cout << "충돌 발생" << "\n";
+	}
 }
 
 void TestPlayerScript::KeyboardInput()
@@ -38,6 +43,7 @@ void TestPlayerScript::KeyboardInput()
 		pos += nmz(GetTransform()->GetRight()) * _speed * DELTA_TIME;
 
 	GetTransform()->SetLocalPosition(pos);
+
 }
 
 void TestPlayerScript::MouseInput()

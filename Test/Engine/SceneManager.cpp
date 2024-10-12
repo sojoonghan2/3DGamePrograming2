@@ -29,7 +29,6 @@ void SceneManager::Update()
 	_activeScene->FinalUpdate();
 }
 
-// TEMP
 void SceneManager::Render()
 {
 	if (_activeScene)
@@ -117,10 +116,38 @@ shared_ptr<GameObject> SceneManager::Pick(int32 screenX, int32 screenY)
 	return picked;
 }
 
-bool SceneManager::CollitionPlayerByObject(shared_ptr<GameObject> obj1, shared_ptr<GameObject> obj2)
+shared_ptr<GameObject> SceneManager::Collition(shared_ptr<GameObject> obj)
 {
-	
-	return false; // 모든 경우에 해당하지 않으면 충돌이 아님
+	auto playerCollider = obj->GetCollider();
+
+	// 플레이어의 충돌기가 없으면 바로 리턴
+	if (!playerCollider) return 0;
+
+	// 게임 오브젝트 목록 가져오기
+	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
+
+	std::cout << "xPos: " << obj->GetCollider()->GetTransform()->GetLocalPosition().x << " yPos: " << obj->GetCollider()->GetTransform()->GetLocalPosition().y << " zPos: " << obj->GetCollider()->GetTransform()->GetLocalPosition().z << "\n";
+
+	// 모든 오브젝트에 대해 반복
+	for (auto& gameObject : gameObjects)
+	{
+		auto objectCollider = gameObject->GetCollider();
+
+		if (objectCollider == gameObjects[5]->GetCollider()) std::cout << "xPos: " << objectCollider->GetTransform()->GetLocalPosition().x << " yPos: " << objectCollider->GetTransform()->GetLocalPosition().y << " zPos: " << objectCollider->GetTransform()->GetLocalPosition().z << "\n";
+
+		// 오브젝트의 충돌기가 없으면 계속 진행
+		if (!objectCollider) continue;
+
+		// 자기 자신과의 충돌 체크
+		if (objectCollider == playerCollider) continue;
+
+		// 충돌 체크
+		if (playerCollider->Intersects(objectCollider))
+		{
+			return gameObject;
+		}
+	}
+	return 0;
 }
 
 shared_ptr<Scene> SceneManager::LoadTestScene()
@@ -155,26 +182,26 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	shared_ptr<GameObject> mainObject = make_shared<GameObject>();
 	mainObject->SetName(L"Main_Object");
 	mainObject->AddComponent(make_shared<Transform>());
+	mainObject->AddComponent(make_shared<BoxCollider>());
 	mainObject->AddComponent(make_shared<TestPlayerScript>());
 	mainObject->GetTransform()->SetLocalPosition(Vec3(1000.f, 70.f, 100.f));
+	dynamic_pointer_cast<BoxCollider>(mainObject->GetCollider())->SetCenter(Vec3(150.f, 70.f, 850.f));
+	dynamic_pointer_cast<BoxCollider>(mainObject->GetCollider())->SetExtents(Vec3(150.f, 150.f, 150.f));
 	scene->AddGameObject(mainObject);
 
 #pragma region FBX & Camera
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Dragon.fbx");
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Helicopter.fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		for (auto& gameObject : gameObjects)
 		{
-			gameObject->SetName(L"Dragon");
+			gameObject->SetName(L"Helicopter");
 			gameObject->GetTransform()->SetParent(mainObject->GetTransform());
-			gameObject->AddComponent(make_shared<BoxCollider>());
 			gameObject->SetCheckFrustum(false);
 			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, -30.f, 100.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
-			dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
-			dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider())->SetExtents(Vec3(0.5f, 0.5f, 0.5f));
 			scene->AddGameObject(gameObject);
 		}
 
@@ -254,7 +281,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMaterial(material->Clone());
 			}
 			dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetRadius(0.5f);
-			dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
+			dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetCenter(Vec3(100.f + i * 200.f, 100.f, 800.f));
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}

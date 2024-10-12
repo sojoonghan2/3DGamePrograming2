@@ -9,12 +9,16 @@ public:
 
 	virtual void FinalUpdate() override;
 	virtual bool Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance) override;
+	virtual bool Intersects(shared_ptr<BaseCollider> otherCollider) override;
 
 	void SetExtents(Vec3 extents) { _extents = extents; }
 	void SetCenter(Vec3 center) { _center = center; }
 
-	Vec3 GetRadius() { return _extents; }
-	Vec3 GetCenter() { return _center; }
+	Vec3 GetExtents() const { return _extents; } 
+	virtual Vec3 GetCenter() const override { return _center; }
+
+	virtual Vec3 GetMin() override { return _center - _extents; }
+	virtual Vec3 GetMax() override { return _center + _extents; }
 
 private:
 	// Local ±‚¡ÿ

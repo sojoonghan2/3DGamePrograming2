@@ -13,7 +13,7 @@ public:
 	void MouseInput();
 
 private:
-	float		_speed = 200.f;
+	float		_speed = 300.f;
 	POINT		m_ptOldCursorPos;
 };
 
