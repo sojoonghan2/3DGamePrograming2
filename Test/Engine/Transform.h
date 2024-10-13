@@ -27,6 +27,13 @@ public:
 	Vec3 GetUp() { return _matWorld.Up(); }
 	Vec3 GetLook() { return _matWorld.Backward(); }
 
+	Vec3 GetParentLook() const {
+		if (auto parent = _parent.lock()) {
+			return parent->GetLook();
+		}
+		return Vec3();
+	}
+
 	void SetLocalPosition(const Vec3& position) { _localPosition = position; }
 	void SetLocalRotation(const Vec3& rotation) { _localRotation = rotation; }
 	void SetLocalRevolution(const Vec3& rotation) { _localRevolution = rotation; }
@@ -39,6 +46,7 @@ public:
 
 public:
 	void SetParent(shared_ptr<Transform> parent) { _parent = parent; }
+	void RemoveParent() { _parent.reset(); }
 	weak_ptr<Transform> GetParent() { return _parent; }
 
 private:

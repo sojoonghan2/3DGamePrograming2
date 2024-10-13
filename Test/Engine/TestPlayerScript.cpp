@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "GameObject.h"
+#include "TestPlayerScript.h"
 #include "Input.h"
 #include "Timer.h"
 #include "SceneManager.h"
@@ -23,7 +24,7 @@ void TestPlayerScript::LateUpdate()
 	auto colliObject = GET_SINGLE(SceneManager)->Collition(GetGameObject());
 	if (colliObject)
 	{
-		std::cout << "面倒 惯积" << "\n";
+		std::cout << "面倒 惯积: " << colliObject->GetID() << "\n";
 	}
 }
 

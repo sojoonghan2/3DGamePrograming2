@@ -206,7 +206,8 @@
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="TableDescriptorHeap.h" />
     <ClInclude Include="Terrain.h" />
-    <ClInclude Include="TestCameraScript.h" />
+    <ClInclude Include="TestBulletScript.h" />
+    <ClInclude Include="TestObjectScript.h" />
     <ClInclude Include="TestPlayerScript.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
@@ -254,7 +255,8 @@
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="TableDescriptorHeap.cpp" />
     <ClCompile Include="Terrain.cpp" />
-    <ClCompile Include="TestCameraScript.cpp" />
+    <ClCompile Include="TestBulletScript.cpp" />
+    <ClCompile Include="TestObjectScript.cpp" />
     <ClCompile Include="TestPlayerScript.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />

@@ -10,8 +10,9 @@
 #include "Camera.h"
 #include "Light.h"
 
-#include "TestCameraScript.h"
+#include "TestObjectScript.h"
 #include "TestPlayerScript.h"
+#include "TestBulletScript.h"
 #include "Resources.h"
 #include "ParticleSystem.h"
 #include "Terrain.h"
@@ -232,6 +233,31 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
+#pragma region Bullet
+	{
+		shared_ptr<GameObject> bullet = make_shared<GameObject>();
+		wstring bulletName = L"Bullet";
+		bullet->SetName(bulletName);
+		bullet->AddComponent(make_shared<Transform>());
+		bullet->AddComponent(make_shared<TestBulletScript>());
+		bullet->SetCheckFrustum(false);
+		bullet->GetTransform()->SetParent(mainObject->GetTransform());
+		bullet->GetTransform()->SetLocalPosition(Vec3(0.f, 10000000000000.f, 0.f));
+		bullet->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+		bullet->SetStatic(false);
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
+			meshRenderer->SetMesh(cubeMesh);
+		}
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+			meshRenderer->SetMaterial(material->Clone());
+		}
+		bullet->AddComponent(meshRenderer);
+		scene->AddGameObject(bullet);
+	}
+
 #pragma region UI_Camera
 	{
 		shared_ptr<GameObject> camera = make_shared<GameObject>();
@@ -279,10 +305,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(objectName);
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetCheckFrustum(false);
-			obj->AddComponent(make_shared<SphereCollider>());
-			obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
 			obj->GetTransform()->SetLocalPosition(Vec3(100.f + i * 200.f, 100.f, 800.f));
-			obj->AddComponent(make_shared<TestCameraScript>());
+			obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+			obj->AddComponent(make_shared<TestObjectScript>());
 			obj->SetStatic(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -293,6 +318,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
 				meshRenderer->SetMaterial(material->Clone());
 			}
+			obj->AddComponent(make_shared<SphereCollider>());
 			dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetRadius(0.5f);
 			dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
 			obj->AddComponent(meshRenderer);
