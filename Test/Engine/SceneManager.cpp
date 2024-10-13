@@ -126,14 +126,14 @@ shared_ptr<GameObject> SceneManager::Collition(shared_ptr<GameObject> obj)
 	// 게임 오브젝트 목록 가져오기
 	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
 
-	std::cout << "xPos: " << obj->GetCollider()->GetTransform()->GetLocalPosition().x << " yPos: " << obj->GetCollider()->GetTransform()->GetLocalPosition().y << " zPos: " << obj->GetCollider()->GetTransform()->GetLocalPosition().z << "\n";
+	//std::cout << "xPos: " << obj->GetCollider()->GetTransform()->GetLocalPosition().x << " yPos: " << obj->GetCollider()->GetTransform()->GetLocalPosition().y << " zPos: " << obj->GetCollider()->GetTransform()->GetLocalPosition().z << "\n";
 
 	// 모든 오브젝트에 대해 반복
 	for (auto& gameObject : gameObjects)
 	{
 		auto objectCollider = gameObject->GetCollider();
 
-		if (objectCollider == gameObjects[5]->GetCollider()) std::cout << "xPos: " << objectCollider->GetTransform()->GetLocalPosition().x << " yPos: " << objectCollider->GetTransform()->GetLocalPosition().y << " zPos: " << objectCollider->GetTransform()->GetLocalPosition().z << "\n";
+		//if (objectCollider == gameObjects[5]->GetCollider()) std::cout << "xPos: " << objectCollider->GetTransform()->GetLocalPosition().x << " yPos: " << objectCollider->GetTransform()->GetLocalPosition().y << " zPos: " << objectCollider->GetTransform()->GetLocalPosition().z << "\n";
 
 		// 오브젝트의 충돌기가 없으면 계속 진행
 		if (!objectCollider) continue;
@@ -182,11 +182,11 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	shared_ptr<GameObject> mainObject = make_shared<GameObject>();
 	mainObject->SetName(L"Main_Object");
 	mainObject->AddComponent(make_shared<Transform>());
-	mainObject->AddComponent(make_shared<BoxCollider>());
 	mainObject->AddComponent(make_shared<TestPlayerScript>());
 	mainObject->GetTransform()->SetLocalPosition(Vec3(1000.f, 70.f, 100.f));
-	dynamic_pointer_cast<BoxCollider>(mainObject->GetCollider())->SetCenter(Vec3(150.f, 70.f, 850.f));
-	dynamic_pointer_cast<BoxCollider>(mainObject->GetCollider())->SetExtents(Vec3(150.f, 150.f, 150.f));
+	mainObject->AddComponent(make_shared<BoxCollider>());
+	dynamic_pointer_cast<BoxCollider>(mainObject->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
+	dynamic_pointer_cast<BoxCollider>(mainObject->GetCollider())->SetExtents(Vec3(100.f, 100.f, 100.f));
 	scene->AddGameObject(mainObject);
 
 #pragma region FBX & Camera
@@ -200,7 +200,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->SetName(L"Helicopter");
 			gameObject->GetTransform()->SetParent(mainObject->GetTransform());
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, -30.f, 100.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
 			scene->AddGameObject(gameObject);
 		}
@@ -209,10 +208,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		camera->SetName(L"Main_Camera");
 		camera->AddComponent(make_shared<Transform>());
 		camera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, FOV=45도
-		camera->GetTransform()->SetParent(gameObjects[0]->GetTransform());
-		camera->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+		camera->GetTransform()->SetParent(mainObject->GetTransform());
 		camera->GetCamera()->SetFar(10000.f);
-		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 10.f, -30.f));
+		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 30.f, -100.f));
 
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
@@ -281,9 +279,16 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMaterial(material->Clone());
 			}
 			dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetRadius(0.5f);
-			dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetCenter(Vec3(100.f + i * 200.f, 100.f, 800.f));
+			dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
+
+			shared_ptr<GameObject> particle = make_shared<GameObject>();
+			particle->AddComponent(make_shared<Transform>());
+			particle->GetTransform()->SetParent(obj->GetTransform());
+			particle->AddComponent(make_shared<ParticleSystem>());
+			particle->SetCheckFrustum(false);
+			scene->AddGameObject(particle);
 		}
 	}
 #pragma endregion
