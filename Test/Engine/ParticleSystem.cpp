@@ -8,6 +8,7 @@
 
 ParticleSystem::ParticleSystem() : Component(COMPONENT_TYPE::PARTICLE_SYSTEM)
 {
+	ParticleStart();
 	_particleBuffer = make_shared<StructuredBuffer>();
 	_particleBuffer->Init(sizeof(ParticleInfo), _maxParticle);
 
@@ -17,7 +18,7 @@ ParticleSystem::ParticleSystem() : Component(COMPONENT_TYPE::PARTICLE_SYSTEM)
 	_mesh = GET_SINGLE(Resources)->LoadPointMesh();
 	_material = GET_SINGLE(Resources)->Get<Material>(L"Particle");
 	shared_ptr<Texture> tex = GET_SINGLE(Resources)->Load<Texture>(
-		L"Bubbles", L"..\\Resources\\Texture\\Particle\\bubble.png");
+		L"Bubbles", L"..\\Resources\\Texture\\Particle\\boom.png");
 
 	_material->SetTexture(0, tex);
 
@@ -30,25 +31,28 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::FinalUpdate()
 {
-	_accTime += DELTA_TIME;
+    if (!_isRunning)
+        return;  // 파티클 시스템이 중지된 상태면 업데이트하지 않음
 
-	int32 add = 0;
-	if (_createInterval < _accTime)
-	{
-		_accTime = _accTime - _createInterval;
-		add = 1;
-	}
+    _accTime += DELTA_TIME;
 
-	_particleBuffer->PushComputeUAVData(UAV_REGISTER::u0);
-	_computeSharedBuffer->PushComputeUAVData(UAV_REGISTER::u1);
+    int32 add = 0;
+    if (_createInterval < _accTime)
+    {
+        _accTime = _accTime - _createInterval;
+        add = 1;
+    }
 
-	_computeMaterial->SetInt(0, _maxParticle);
-	_computeMaterial->SetInt(1, add);
+    _particleBuffer->PushComputeUAVData(UAV_REGISTER::u0);
+    _computeSharedBuffer->PushComputeUAVData(UAV_REGISTER::u1);
 
-	_computeMaterial->SetVec2(1, Vec2(DELTA_TIME, _accTime));
-	_computeMaterial->SetVec4(0, Vec4(_minLifeTime, _maxLifeTime, _minSpeed, _maxSpeed));
+    _computeMaterial->SetInt(0, _maxParticle);
+    _computeMaterial->SetInt(1, add);
 
-	_computeMaterial->Dispatch(1, 1, 1);
+    _computeMaterial->SetVec2(1, Vec2(DELTA_TIME, _accTime));
+    _computeMaterial->SetVec4(0, Vec4(_minLifeTime, _maxLifeTime, _minSpeed, _maxSpeed));
+
+    _computeMaterial->Dispatch(1, 1, 1);
 }
 
 void ParticleSystem::Render()

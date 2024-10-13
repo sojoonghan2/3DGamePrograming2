@@ -20,7 +20,8 @@ void TestPlayerScript::LateUpdate()
 	KeyboardInput();
 	MouseInput();
 
-	if (GET_SINGLE(SceneManager)->Collition(GetGameObject()))
+	auto colliObject = GET_SINGLE(SceneManager)->Collition(GetGameObject());
+	if (colliObject)
 	{
 		std::cout << "충돌 발생" << "\n";
 	}

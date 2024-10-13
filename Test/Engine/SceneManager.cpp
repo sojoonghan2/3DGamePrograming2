@@ -126,14 +126,10 @@ shared_ptr<GameObject> SceneManager::Collition(shared_ptr<GameObject> obj)
 	// 게임 오브젝트 목록 가져오기
 	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
 
-	//std::cout << "xPos: " << obj->GetCollider()->GetTransform()->GetLocalPosition().x << " yPos: " << obj->GetCollider()->GetTransform()->GetLocalPosition().y << " zPos: " << obj->GetCollider()->GetTransform()->GetLocalPosition().z << "\n";
-
 	// 모든 오브젝트에 대해 반복
 	for (auto& gameObject : gameObjects)
 	{
 		auto objectCollider = gameObject->GetCollider();
-
-		//if (objectCollider == gameObjects[5]->GetCollider()) std::cout << "xPos: " << objectCollider->GetTransform()->GetLocalPosition().x << " yPos: " << objectCollider->GetTransform()->GetLocalPosition().y << " zPos: " << objectCollider->GetTransform()->GetLocalPosition().z << "\n";
 
 		// 오브젝트의 충돌기가 없으면 계속 진행
 		if (!objectCollider) continue;
@@ -148,6 +144,24 @@ shared_ptr<GameObject> SceneManager::Collition(shared_ptr<GameObject> obj)
 		}
 	}
 	return 0;
+}
+
+shared_ptr<GameObject> SceneManager::FindObjectByName(const wstring& name)
+{
+	if (_activeScene == nullptr)
+		return nullptr;
+
+	const vector<shared_ptr<GameObject>>& objects = _activeScene->GetGameObjects();
+
+	for (const auto& obj : objects)
+	{
+		if (obj->GetName() == name)
+		{
+			return obj; // 이름이 일치하는 오브젝트를 찾으면 반환
+		}
+	}
+
+	return nullptr; // 찾지 못하면 nullptr 반환
 }
 
 shared_ptr<Scene> SceneManager::LoadTestScene()
@@ -256,12 +270,13 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
-#pragma region Object
+#pragma region Object & Particle
 	{
 		for (int i{}; i < 10; ++i)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->SetName(L"OBJ");
+			wstring objectName = L"OBJ" + to_wstring(i);
+			obj->SetName(objectName);
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetCheckFrustum(false);
 			obj->AddComponent(make_shared<SphereCollider>());
@@ -284,10 +299,14 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			scene->AddGameObject(obj);
 
 			shared_ptr<GameObject> particle = make_shared<GameObject>();
+			wstring particleName = L"PARTICLE" + to_wstring(i);
+			particle->SetName(particleName);
 			particle->AddComponent(make_shared<Transform>());
 			particle->GetTransform()->SetParent(obj->GetTransform());
-			particle->AddComponent(make_shared<ParticleSystem>());
+			shared_ptr<ParticleSystem> particleSystem = make_shared<ParticleSystem>();
+			particle->AddComponent(particleSystem);
 			particle->SetCheckFrustum(false);
+			particleSystem->ParticleStop();
 			scene->AddGameObject(particle);
 		}
 	}

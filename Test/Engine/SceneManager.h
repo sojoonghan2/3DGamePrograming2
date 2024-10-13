@@ -24,6 +24,8 @@ public:
 
 	shared_ptr<GameObject> Collition(shared_ptr<GameObject> obj);
 
+	shared_ptr<GameObject> FindObjectByName(const wstring& name);
+
 public:
 	shared_ptr<Scene> GetActiveScene() { return _activeScene; }
 

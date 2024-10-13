@@ -72,7 +72,7 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
         return;
 
     float ratio = g_data[id].curTime / g_data[id].lifeTime;
-    float scale = ((g_float_1 - g_float_0) * ratio + g_float_0) / 2.f;
+    float scale = ((g_float_1 - g_float_0) * ratio + g_float_0) * 2.f;
 
     // View Space
     output[0].position = vtx.viewPos + float4(-scale, scale, 0.f, 0.f);
