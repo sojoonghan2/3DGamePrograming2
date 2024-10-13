@@ -27,12 +27,14 @@ void TestBulletScript::LateUpdate()
         pos += nmz(_parentLook) * _speed * DELTA_TIME; // Look 벡터를 이용하여 이동
         GetTransform()->SetLocalPosition(pos);
     }
-    if (GetTransform()->GetLocalPosition().z > 2000.f)
+    if (GetTransform()->GetLocalPosition().z > 3000.f)
     {
         _running = false;
         if(_parent) GetTransform()->SetLocalPosition(Vec3(_parent->GetTransform()->GetLocalPosition()));
         GetTransform()->SetParent(_parent);
     }
+
+    //std::cout << GetTransform()->GetLocalPosition().x << ", " << GetTransform()->GetLocalPosition().y << ", " << GetTransform()->GetLocalPosition().z << "\n";
 }
 
 void TestBulletScript::KeyboardInput()

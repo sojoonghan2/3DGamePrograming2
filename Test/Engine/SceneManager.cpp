@@ -113,38 +113,24 @@ shared_ptr<GameObject> SceneManager::Pick(int32 screenX, int32 screenY)
 			
 		}
 	}
-	if (picked) std::cout << "Pick!" << "\n";
+	if (picked) std::cout << "Pick!: " << picked->GetID() << "\n";
 	return picked;
 }
 
-shared_ptr<GameObject> SceneManager::Collition(shared_ptr<GameObject> obj)
+bool SceneManager::Collition(shared_ptr<GameObject> obj1, shared_ptr<GameObject> obj2)
 {
-	auto playerCollider = obj->GetCollider();
+	auto obj1Collider = obj1->GetCollider();
+	auto obj2Collider = obj2->GetCollider();
 
-	// 플레이어의 충돌기가 없으면 바로 리턴
-	if (!playerCollider) return 0;
+	if (!obj1Collider) return 0;
+	if (!obj2Collider) return 0;
 
-	// 게임 오브젝트 목록 가져오기
-	auto& gameObjects = GET_SINGLE(SceneManager)->GetActiveScene()->GetGameObjects();
-
-	// 모든 오브젝트에 대해 반복
-	for (auto& gameObject : gameObjects)
+	// 충돌 체크
+	if (obj1Collider->Intersects(obj2Collider))
 	{
-		auto objectCollider = gameObject->GetCollider();
-
-		// 오브젝트의 충돌기가 없으면 계속 진행
-		if (!objectCollider) continue;
-
-		// 자기 자신과의 충돌 체크
-		if (objectCollider == playerCollider) continue;
-
-		// 충돌 체크
-		if (playerCollider->Intersects(objectCollider))
-		{
-			return gameObject;
-		}
+		return true;
 	}
-	return 0;
+	return false;
 }
 
 shared_ptr<GameObject> SceneManager::FindObjectByName(const wstring& name)
@@ -254,6 +240,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
 			meshRenderer->SetMaterial(material->Clone());
 		}
+		bullet->AddComponent(make_shared<BoxCollider>());
+		dynamic_pointer_cast<BoxCollider>(bullet->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
+		dynamic_pointer_cast<BoxCollider>(bullet->GetCollider())->SetExtents(Vec3(10.f, 10.f, 10.f));
 		bullet->AddComponent(meshRenderer);
 		scene->AddGameObject(bullet);
 	}

@@ -21,10 +21,22 @@ void TestPlayerScript::LateUpdate()
 	KeyboardInput();
 	MouseInput();
 
-	auto colliObject = GET_SINGLE(SceneManager)->Collition(GetGameObject());
-	if (colliObject)
+	//std::cout << GetTransform()->GetLocalPosition().x << ", " << GetTransform()->GetLocalPosition().y << ", " << GetTransform()->GetLocalPosition().z << "\n";
+
+	vector<shared_ptr<GameObject>> Objects(10);
+	for (int i = 0; i < Objects.size(); ++i)
 	{
-		std::cout << "충돌 발생: " << colliObject->GetID() << "\n";
+		// "OBJ" 뒤에 숫자를 붙여서 이름을 만듦
+		std::wstring objectName = L"OBJ" + std::to_wstring(i);
+
+		// 해당 이름의 오브젝트를 찾고 벡터에 할당
+		Objects[i] = GET_SINGLE(SceneManager)->FindObjectByName(objectName);
+
+		auto is_collision = GET_SINGLE(SceneManager)->Collition(GetGameObject(), Objects[i]);
+		if (is_collision)
+		{
+			std::cout << "플레이어 충돌 발생: " << Objects[i]->GetID() << "\n";
+		}
 	}
 }
 
