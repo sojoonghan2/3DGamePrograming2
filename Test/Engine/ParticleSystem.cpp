@@ -17,8 +17,7 @@ ParticleSystem::ParticleSystem() : Component(COMPONENT_TYPE::PARTICLE_SYSTEM)
 
 	_mesh = GET_SINGLE(Resources)->LoadPointMesh();
 	_material = GET_SINGLE(Resources)->Get<Material>(L"Particle");
-	shared_ptr<Texture> tex = GET_SINGLE(Resources)->Load<Texture>(
-		L"Bubbles", L"..\\Resources\\Texture\\Particle\\boom.png");
+	shared_ptr<Texture> tex = GET_SINGLE(Resources)->Load<Texture>(L"Bubbles", L"..\\Resources\\Texture\\Particle\\boom.png");
 
 	_material->SetTexture(0, tex);
 
@@ -31,8 +30,7 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::FinalUpdate()
 {
-    if (!_isRunning)
-        return;  // 파티클 시스템이 중지된 상태면 업데이트하지 않음
+    if (!_isRunning) return;
 
     _accTime += DELTA_TIME;
 

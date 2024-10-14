@@ -228,7 +228,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		bullet->AddComponent(make_shared<TestBulletScript>());
 		bullet->SetCheckFrustum(false);
 		bullet->GetTransform()->SetParent(mainObject->GetTransform());
-		bullet->GetTransform()->SetLocalPosition(Vec3(0.f, 10000000000000.f, 0.f));
+		bullet->GetTransform()->SetLocalPosition(Vec3(0.f, 100000000.f, 0.f));
 		bullet->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 		bullet->SetStatic(false);
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
@@ -307,9 +307,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
 				meshRenderer->SetMaterial(material->Clone());
 			}
-			obj->AddComponent(make_shared<SphereCollider>());
-			dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetRadius(0.5f);
-			dynamic_pointer_cast<SphereCollider>(obj->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
+			obj->AddComponent(make_shared<BoxCollider>());
+			dynamic_pointer_cast<BoxCollider>(obj->GetCollider())->SetExtents(Vec3(100.f, 100.f, 100.f));
+			dynamic_pointer_cast<BoxCollider>(obj->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 

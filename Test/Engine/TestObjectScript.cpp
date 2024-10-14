@@ -15,7 +15,6 @@ TestObjectScript::~TestObjectScript() {}
 void TestObjectScript::LateUpdate()
 {
 	shared_ptr<GameObject> mainObject = GET_SINGLE(SceneManager)->FindObjectByName(L"Main_Object");
-	shared_ptr<GameObject> targetObject = GET_SINGLE(SceneManager)->FindObjectByName(L"PARTICLE2");
 
 	Vec3 pos = GetTransform()->GetLocalPosition();
 
@@ -31,17 +30,34 @@ void TestObjectScript::LateUpdate()
 	if (INPUT->GetButton(KEY_TYPE::L))
 		pos += nmz(GetTransform()->GetRight()) * _speed * DELTA_TIME;
 
-	if (INPUT->GetButtonDown(KEY_TYPE::RBUTTON))
-	{
-		targetObject->GetParticleSystem()->ParticleStart();
-	}
-
 	auto bulletObject = GET_SINGLE(SceneManager)->FindObjectByName(L"Bullet");
+
 	auto is_collision = GET_SINGLE(SceneManager)->Collition(GetGameObject(), bulletObject);
+
 	if (is_collision)
 	{
-		std::cout << "오브젝트 충돌 발생: " << GetGameObject()->GetID() << "\n";
-	}
+		// OBJn 형식에서 n 번호 추출
+		wstring objectName = GetGameObject()->GetName();
+		size_t index = objectName.find(L"OBJ");
+		if (index != wstring::npos)
+		{
+			// "OBJ" 이후의 번호 추출
+			wstring numberStr = objectName.substr(3);  // "OBJ" 다음의 부분만 남김
+			int objectNumber = std::stoi(numberStr);   // 문자열을 숫자로 변환
+
+			// 해당 번호의 파티클 오브젝트 이름 생성 (PARTICLEn)
+			wstring particleName = L"PARTICLE" + std::to_wstring(objectNumber);
+
+			// 해당 파티클 오브젝트 찾기
+			shared_ptr<GameObject> targetObject = GET_SINGLE(SceneManager)->FindObjectByName(particleName);
+			if (targetObject && targetObject->GetParticleSystem())
+			{
+				// 파티클 시작
+				//targetObject->GetParticleSystem()->ParticleStart();
+				std::cout << "오브젝트 충돌 발생: ";
+				std::wcout << particleName << std::endl;
+			}
+		}
 
 	GetTransform()->SetLocalPosition(pos);
 }
