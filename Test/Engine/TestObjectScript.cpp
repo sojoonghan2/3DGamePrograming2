@@ -36,6 +36,11 @@ void TestObjectScript::LateUpdate()
 
 	if (is_collision)
 	{
+		if (!initialized)
+		{
+			initialized = true;
+			return; // 처음에는 충돌 검사를 하지 않음
+		}
 		// OBJn 형식에서 n 번호 추출
 		wstring objectName = GetGameObject()->GetName();
 		size_t index = objectName.find(L"OBJ");
@@ -58,6 +63,6 @@ void TestObjectScript::LateUpdate()
 				std::wcout << particleName << std::endl;
 			}
 		}
-
+	}
 	GetTransform()->SetLocalPosition(pos);
 }

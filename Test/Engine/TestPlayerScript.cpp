@@ -18,6 +18,12 @@ TestPlayerScript::~TestPlayerScript()
 
 void TestPlayerScript::LateUpdate()
 {
+	static bool initialized = false;
+	if (!initialized)
+	{
+		initialized = true;
+		return; // 처음에는 충돌 검사를 하지 않음
+	}
 	KeyboardInput();
 	MouseInput();
 
@@ -35,7 +41,8 @@ void TestPlayerScript::LateUpdate()
 		auto is_collision = GET_SINGLE(SceneManager)->Collition(GetGameObject(), Objects[i]);
 		if (is_collision)
 		{
-			std::cout << "플레이어 충돌 발생: " << Objects[i]->GetID() << "\n";
+			std::cout << "플레이어 충돌 발생: ";
+			std::wcout << objectName << "\n";
 		}
 	}
 }
