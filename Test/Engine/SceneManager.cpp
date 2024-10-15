@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "Material.h"
 #include "GameObject.h"
+#include "BulletObject.h"
 #include "MeshRenderer.h"
 #include "Transform.h"
 #include "Camera.h"
@@ -221,7 +222,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region Bullet
 	{
-		shared_ptr<GameObject> bullet = make_shared<GameObject>();
+		shared_ptr<BulletObject> bullet = make_shared<BulletObject>();
 		wstring bulletName = L"Bullet";
 		bullet->SetName(bulletName);
 		bullet->AddComponent(make_shared<Transform>());
@@ -246,6 +247,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		bullet->AddComponent(meshRenderer);
 		scene->AddGameObject(bullet);
 	}
+#pragma endregion
 
 #pragma region UI_Camera
 	{

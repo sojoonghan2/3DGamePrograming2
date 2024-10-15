@@ -137,11 +137,14 @@ void GameObject::AddComponent(shared_ptr<Component> component)
 {
 	component->SetGameObject(shared_from_this());
 
+	// 타입을 숫자로 변환 후 index에 저장
 	uint8 index = static_cast<uint8>(component->GetType());
+	// 컴포넌트의 경우
 	if (index < FIXED_COMPONENT_COUNT)
 	{
 		_components[index] = component;
 	}
+	// 컴포넌트가 아니고 스크립트의 경우
 	else
 	{
 		_scripts.push_back(dynamic_pointer_cast<MonoBehaviour>(component));
