@@ -58,7 +58,7 @@ void TestObjectScript::LateUpdate()
 			if (targetObject && targetObject->GetParticleSystem())
 			{
 				// 파티클 시작
-				//targetObject->GetParticleSystem()->ParticleStart();
+				targetObject->GetParticleSystem()->ParticleStart();
 				std::cout << "오브젝트 충돌 발생: ";
 				std::wcout << particleName << std::endl;
 			}
