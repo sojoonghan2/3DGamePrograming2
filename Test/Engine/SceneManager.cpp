@@ -222,7 +222,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region Bullet
 	{
-		shared_ptr<BulletObject> bullet = make_shared<BulletObject>();
+		shared_ptr<GameObject> bullet = make_shared<GameObject>();
 		wstring bulletName = L"Bullet";
 		bullet->SetName(bulletName);
 		bullet->AddComponent(make_shared<Transform>());
