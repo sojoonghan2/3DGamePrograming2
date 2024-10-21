@@ -26,6 +26,9 @@ public:
 	void SetMesh(shared_ptr<Mesh> mesh) { _mesh = mesh; }
 	void SetMaterial(shared_ptr<Material> material, uint32 idx = 0);
 
+	void SetEnabled(bool enabled) { _enabled = enabled; }
+	bool IsEnabled() const { return _enabled; }
+
 	void Render();
 	void Render(shared_ptr<class InstancingBuffer>& buffer);
 	void RenderShadow();
@@ -35,5 +38,7 @@ public:
 private:
 	shared_ptr<Mesh> _mesh;
 	vector<shared_ptr<Material>> _materials;
+
+	bool _enabled = true;
 };
 

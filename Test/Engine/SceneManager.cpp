@@ -14,6 +14,7 @@
 #include "TestObjectScript.h"
 #include "TestPlayerScript.h"
 #include "TestBulletScript.h"
+#include "TestTitleScript.h"
 #include "Resources.h"
 #include "ParticleSystem.h"
 #include "Terrain.h"
@@ -382,6 +383,32 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		light->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));
 
 		scene->AddGameObject(light);
+	}
+#pragma endregion
+
+#pragma region Title
+	{
+		shared_ptr<GameObject> title = make_shared<GameObject>();
+		title->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI"));
+		title->AddComponent(make_shared<Transform>());
+		title->GetTransform()->SetLocalScale(Vec3(800.f, 800.f, 0.f));
+		title->GetTransform()->SetLocalPosition(Vec3(0.f, 100.f, 500.f));
+		title->AddComponent(make_shared<TestTitleScript>());
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Title", L"..\\Resources\\Texture\\Title.jpg");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		title->AddComponent(meshRenderer);
+		scene->AddGameObject(title);
 	}
 #pragma endregion
 

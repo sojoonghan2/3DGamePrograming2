@@ -159,6 +159,9 @@
     <ClCompile Include="BulletObject.cpp">
       <Filter>Object</Filter>
     </ClCompile>
+    <ClCompile Include="TestTitleScript.cpp">
+      <Filter>Object\Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -292,6 +295,9 @@
     </ClInclude>
     <ClInclude Include="BulletObject.h">
       <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="TestTitleScript.h">
+      <Filter>Object\Test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

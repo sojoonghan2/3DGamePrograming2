@@ -26,6 +26,7 @@ void MeshRenderer::SetMaterial(shared_ptr<Material> material, uint32 idx)
 
 void MeshRenderer::Render()
 {
+	if (!_enabled) return;
 	for (uint32 i = 0; i < _materials.size(); i++)
 	{
 		shared_ptr<Material>& material = _materials[i];
