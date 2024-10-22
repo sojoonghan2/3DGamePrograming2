@@ -12,8 +12,12 @@ public:
 	void KeyboardInput();
 	void MouseInput();
 
+	void CollisionTerrain();
+
 private:
-	float		_speed = 300.f;
-	POINT		m_ptOldCursorPos;
+	float					_speed = 300.f;
+	POINT					m_ptOldCursorPos;
+
+	shared_ptr<GameObject>	_terrain;
 };
 

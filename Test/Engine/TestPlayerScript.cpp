@@ -10,6 +10,7 @@
 
 TestPlayerScript::TestPlayerScript()
 {
+	_terrain = GET_SINGLE(SceneManager)->FindObjectByName(L"Terrain");
 }
 
 TestPlayerScript::~TestPlayerScript()
@@ -26,6 +27,7 @@ void TestPlayerScript::LateUpdate()
 	}
 	KeyboardInput();
 	MouseInput();
+	CollisionTerrain();
 
 	//std::cout << GetTransform()->GetLocalPosition().x << ", " << GetTransform()->GetLocalPosition().y << ", " << GetTransform()->GetLocalPosition().z << "\n";
 
@@ -92,4 +94,9 @@ void TestPlayerScript::MouseInput()
 		const POINT& pos2 = INPUT->GetMousePos();
 		GET_SINGLE(SceneManager)->Pick(pos2.x, pos2.y);
 	}
+}
+
+void TestPlayerScript::CollisionTerrain()
+{
+
 }

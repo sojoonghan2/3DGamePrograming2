@@ -333,6 +333,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma region Terrain
 	{
 		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->SetName(L"Terrain");
 		obj->AddComponent(make_shared<Transform>());
 		obj->AddComponent(make_shared<Terrain>());
 		obj->AddComponent(make_shared<MeshRenderer>());

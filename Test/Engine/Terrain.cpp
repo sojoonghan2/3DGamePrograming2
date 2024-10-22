@@ -30,11 +30,11 @@ void Terrain::Init(int32 sizeX, int32 sizeZ)
 	_material->SetInt(2, _sizeZ);
 	_material->SetFloat(0, _maxTesselation);
 
-	shared_ptr<Texture> heightMap = GET_SINGLE(Resources)->Load<Texture>(L"HeightMap", L"..\\Resources\\Texture\\Terrain\\height.png");
-	Vec2 v = Vec2(heightMap->GetWidth(), heightMap->GetHeight());
-	_material->SetVec2(0, Vec2(heightMap->GetWidth(), heightMap->GetHeight()));
+	_heightMap = GET_SINGLE(Resources)->Load<Texture>(L"HeightMap", L"..\\Resources\\Texture\\Terrain\\height.png");
+	Vec2 v = Vec2(_heightMap->GetWidth(), _heightMap->GetHeight());
+	_material->SetVec2(0, Vec2(_heightMap->GetWidth(), _heightMap->GetHeight()));
 	_material->SetVec2(1, Vec2(1000.f, 5000.f));
-	_material->SetTexture(2, heightMap);
+	_material->SetTexture(2, _heightMap);
 
 	shared_ptr<MeshRenderer> meshRenderer = GetGameObject()->GetMeshRenderer();
 	{
@@ -55,4 +55,9 @@ void Terrain::FinalUpdate()
 
 	Vec3 pos = mainCamera->GetTransform()->GetLocalPosition();
 	_material->SetVec4(0, Vec4(pos.x, pos.y, pos.z, 0));
+}
+
+float Terrain::GetHeight(float x, float z)
+{
+	
 }
