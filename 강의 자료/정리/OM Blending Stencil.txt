@@ -61,20 +61,20 @@ Color = SrcColor * 1 + DestColor * SrcAlpha
 검사 On 안해두면 성공한 것으로 취급
 
 ▶ 깊이-스텐실 상태
-typedef struct D3D12_DEPTH_STENCIL_DESC
+구조체 D3D12_DEPTH_STENCIL_DESC
 BOOL StencilEnable: 스텐실 검사 활성화
 UINT8 StencilReadMask: 스텐실 버퍼 읽기 매스크
 UINT8 StencilWriteMask: 스텐실 버퍼 쓰기 매스크
 D3D12_DEPTH_STENCILOP_DESC FrontFace: 전면 다각형 스텐실 버퍼 갱신
 D3D12_DEPTH_STENCILOP_DESC BackFace: 은면 다각형 스텐실 버퍼 갱신
 
-typedef struct D3D12 DEPTH_STENCILOP_DESC
+구조체 D3D12 DEPTH_STENCILOP_DESC
 D3D12_COMPARISON_FUNC StencilFunc: 스텐실 테스트시 비교 연산 정의
 
-typedef enum D3D12_STENCIL_OP
+enum D3D12_STENCIL_OP
 KEEP, ZERO, REPLACE, INCR_SAT, DECR_SAT, INVERT, INCR, DECR
 
-스텐실 참조 값 
+▶ 스텐실 참조 값 
 OMSetStencilRef(UINT StencilRef); // 참조값
 
 ▶ 평면 거울 구현
