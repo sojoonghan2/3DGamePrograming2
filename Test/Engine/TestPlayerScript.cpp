@@ -3,7 +3,6 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "GameObject.h"
-#include "TestPlayerScript.h"
 #include "Input.h"
 #include "Timer.h"
 #include "SceneManager.h"

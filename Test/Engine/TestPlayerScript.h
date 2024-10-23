@@ -20,4 +20,3 @@ private:
 
 	shared_ptr<GameObject>	_terrain;
 };
-

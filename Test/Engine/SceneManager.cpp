@@ -15,6 +15,7 @@
 #include "TestPlayerScript.h"
 #include "TestBulletScript.h"
 #include "TestTitleScript.h"
+#include "TestCameraScript.h"
 #include "Resources.h"
 #include "ParticleSystem.h"
 #include "Terrain.h"
@@ -209,11 +210,13 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 		shared_ptr<GameObject> camera = make_shared<GameObject>();
 		camera->SetName(L"Main_Camera");
+		camera->AddComponent(make_shared<TestCameraScript>());
 		camera->AddComponent(make_shared<Transform>());
 		camera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, FOV=45µµ
 		camera->GetTransform()->SetParent(mainObject->GetTransform());
 		camera->GetCamera()->SetFar(10000.f);
 		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 30.f, -100.f));
+		//camera->GetTransform()->SetLocalPosition(Vec3(1000.f, 80.f, 0.f));
 
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
@@ -223,30 +226,33 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region Bullet
 	{
-		shared_ptr<GameObject> bullet = make_shared<GameObject>();
-		wstring bulletName = L"Bullet";
-		bullet->SetName(bulletName);
-		bullet->AddComponent(make_shared<Transform>());
-		bullet->AddComponent(make_shared<TestBulletScript>());
-		bullet->SetCheckFrustum(false);
-		bullet->GetTransform()->SetParent(mainObject->GetTransform());
-		bullet->GetTransform()->SetLocalPosition(Vec3(0.f, 100000000.f, 0.f));
-		bullet->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-		bullet->SetStatic(false);
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		for (int i{}; i < 50; ++i)
 		{
-			shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
-			meshRenderer->SetMesh(cubeMesh);
+			shared_ptr<GameObject> bullet = make_shared<GameObject>();
+			wstring bulletName = L"Bullet";
+			bullet->SetName(bulletName);
+			bullet->AddComponent(make_shared<Transform>());
+			bullet->AddComponent(make_shared<TestBulletScript>());
+			bullet->SetCheckFrustum(false);
+			bullet->GetTransform()->SetParent(mainObject->GetTransform());
+			bullet->GetTransform()->SetLocalPosition(Vec3(0.f, 100000000.f, 0.f));
+			bullet->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+			bullet->SetStatic(false);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> cubeMesh = GET_SINGLE(Resources)->LoadCubeMesh();
+				meshRenderer->SetMesh(cubeMesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+				meshRenderer->SetMaterial(material->Clone());
+			}
+			bullet->AddComponent(make_shared<BoxCollider>());
+			dynamic_pointer_cast<BoxCollider>(bullet->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
+			dynamic_pointer_cast<BoxCollider>(bullet->GetCollider())->SetExtents(Vec3(10.f, 10.f, 10.f));
+			bullet->AddComponent(meshRenderer);
+			scene->AddGameObject(bullet);
 		}
-		{
-			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
-			meshRenderer->SetMaterial(material->Clone());
-		}
-		bullet->AddComponent(make_shared<BoxCollider>());
-		dynamic_pointer_cast<BoxCollider>(bullet->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
-		dynamic_pointer_cast<BoxCollider>(bullet->GetCollider())->SetExtents(Vec3(10.f, 10.f, 10.f));
-		bullet->AddComponent(meshRenderer);
-		scene->AddGameObject(bullet);
 	}
 #pragma endregion
 
