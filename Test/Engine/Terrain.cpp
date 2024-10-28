@@ -59,5 +59,5 @@ void Terrain::FinalUpdate()
 
 float Terrain::GetHeight(float x, float z)
 {
-	
+	return 0;
 }
