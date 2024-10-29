@@ -198,3 +198,29 @@ void Texture::CreateFromResource(ComPtr<ID3D12Resource> tex2D)
 		DEVICE->CreateShaderResourceView(_tex2D.Get(), &srvDesc, _srvHeapBegin);
 	}
 }
+
+float Texture::GetPixel(float x, float z)
+{
+	// 텍스처 이미지가 로드되지 않았다면 0.0f 반환
+	if (!_image.GetImage(0, 0, 0))
+		return 0.0f;
+
+	// 이미지 데이터 접근
+	const Image* img = _image.GetImage(0, 0, 0);
+	int width = static_cast<int>(img->width);
+	int height = static_cast<int>(img->height);
+
+	// 좌표를 텍스처 맵의 픽셀 좌표로 변환
+	int pixelX = static_cast<int>(fmod(x, 1.0f) * (width - 1));  // x 좌표를 텍스처 비율로 변환
+	int pixelZ = static_cast<int>(fmod(z, 1.0f) * (height - 1)); // z 좌표를 텍스처 비율로 변환
+
+	// 좌표가 유효한 범위인지 확인
+	if (pixelX < 0 || pixelX >= width || pixelZ < 0 || pixelZ >= height)
+		return 0.0f;
+
+	// 픽셀의 높이 값을 가져옴 (빨간색 채널을 높이 값으로 가정)
+	uint8_t* pixelData = img->pixels + pixelZ * img->rowPitch + pixelX * 4; // 4: RGBA
+	float heightValue = pixelData[0] / 255.0f; // 빨간색 채널을 사용하여 높이 값으로 변환
+
+	return heightValue;
+}

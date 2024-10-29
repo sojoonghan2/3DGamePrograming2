@@ -6,10 +6,11 @@
 #include "Input.h"
 #include "Timer.h"
 #include "SceneManager.h"
+#include "Terrain.h"
 
 TestPlayerScript::TestPlayerScript()
 {
-	_terrain = GET_SINGLE(SceneManager)->FindObjectByName(L"Terrain");
+	
 }
 
 TestPlayerScript::~TestPlayerScript()
@@ -21,6 +22,7 @@ void TestPlayerScript::LateUpdate()
 	static bool initialized = false;
 	if (!initialized)
 	{
+		_terrain = GET_SINGLE(SceneManager)->FindObjectByName(L"Terrain");
 		initialized = true;
 		return; // 처음에는 충돌 검사를 하지 않음
 	}
@@ -97,5 +99,7 @@ void TestPlayerScript::MouseInput()
 
 void TestPlayerScript::CollisionTerrain()
 {
-
+	std::cout << "Player yPos: " << GetTransform()->GetLocalPosition().y << "\n";
+	_terrain->GetTerrain()->GetHeight(GetTransform()->GetLocalPosition().x,
+		GetTransform()->GetLocalPosition().z);
 }

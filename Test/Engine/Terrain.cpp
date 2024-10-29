@@ -30,7 +30,7 @@ void Terrain::Init(int32 sizeX, int32 sizeZ)
 	_material->SetInt(2, _sizeZ);
 	_material->SetFloat(0, _maxTesselation);
 
-	_heightMap = GET_SINGLE(Resources)->Load<Texture>(L"HeightMap", L"..\\Resources\\Texture\\Terrain\\height.png");
+	_heightMap = GET_SINGLE(Resources)->Load<Texture>(L"HeightMap", L"..\\Resources\\Texture\\Terrain\\height1.png");
 	Vec2 v = Vec2(_heightMap->GetWidth(), _heightMap->GetHeight());
 	_material->SetVec2(0, Vec2(_heightMap->GetWidth(), _heightMap->GetHeight()));
 	_material->SetVec2(1, Vec2(1000.f, 5000.f));
@@ -59,5 +59,12 @@ void Terrain::FinalUpdate()
 
 float Terrain::GetHeight(float x, float z)
 {
-	return 0;
+	if (!_heightMap)
+		return 0.0f;
+	// x, z를 텍스처 맵의 좌표로 변환하고 높이 값을 가져옴
+	// 여기서부터 다시 작업
+	float heightValue = _heightMap->GetPixel(x / (_sizeX * 50.0f), z / (_sizeZ * 50.0f));
+
+	// 높이 값을 실제 높이로 변환
+	return heightValue * 100;
 }
