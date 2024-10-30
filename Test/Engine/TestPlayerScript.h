@@ -13,6 +13,8 @@ public:
 	void MouseInput();
 
 	void CollisionTerrain();
+	void AvoidObstacles();
+	bool IsObstacleInFront(const Vec3& direction);
 
 private:
 	float					_speed = 300.f;
