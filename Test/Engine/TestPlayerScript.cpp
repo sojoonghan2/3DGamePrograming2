@@ -107,3 +107,35 @@ void TestPlayerScript::CollisionTerrain()
 		std::cout << "터레인 충돌 발생\n";
 	}
 }
+
+void TestPlayerScript::AvoidObstacles()
+{
+	Vec3 forward = nmz(GetTransform()->GetLook());
+	Vec3 right = nmz(GetTransform()->GetRight());
+
+	// 정면 레이 캐스팅
+	if (IsObstacleInFront(forward))
+	{
+		// 오른쪽으로 회전
+		Vec3 newDirection = forward + right; // 오른쪽으로 이동
+
+		// 새로운 방향에도 오브젝트가 있는지 확인
+		if (IsObstacleInFront(nmz(newDirection)))
+		{
+			// 왼쪽으로 회전
+			newDirection = forward - right; // 왼쪽으로 이동
+		}
+
+		// 최종 방향으로 이동
+		GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition() + nmz(newDirection) * _speed * DELTA_TIME);
+	}
+}
+
+bool TestPlayerScript::IsObstacleInFront(const Vec3& direction)
+{
+	// 여기부터 시작
+	// 광선을 쏘아 충돌 체크 (이 예시에서는 가상의 RayCast 함수를 사용)
+	float distance = 5.0f; // 감지 거리
+	return false;
+	//return RayCast(GetTransform()->GetLocalPosition(), direction, distance);
+}
