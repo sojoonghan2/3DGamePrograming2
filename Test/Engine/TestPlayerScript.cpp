@@ -99,7 +99,11 @@ void TestPlayerScript::MouseInput()
 
 void TestPlayerScript::CollisionTerrain()
 {
-	std::cout << "Player yPos: " << GetTransform()->GetLocalPosition().y << "\n";
-	_terrain->GetTerrain()->GetHeight(GetTransform()->GetLocalPosition().x,
-		GetTransform()->GetLocalPosition().z);
+	if (GetTransform()->GetLocalPosition().y <= _terrain->GetTerrain()->GetHeight(GetTransform()->GetLocalPosition().x,
+		GetTransform()->GetLocalPosition().z))
+	{
+		std::cout << "first: " << GetTransform()->GetLocalPosition().y << "\n";
+		std::cout << "second: " << _terrain->GetTerrain()->GetHeight(GetTransform()->GetLocalPosition().x, GetTransform()->GetLocalPosition().z) << "\n";
+		std::cout << "터레인 충돌 발생\n";
+	}
 }

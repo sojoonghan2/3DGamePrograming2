@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include <vector>
 
 class Terrain : public Component
 {
@@ -19,8 +20,8 @@ private:
 	float						_maxTesselation = 4.f;
 
 	shared_ptr<class Texture>	_heightMap;
-
 	shared_ptr<class Material>	_material;
+
+	int32                       _heightMapWidth = 0;
+	int32                       _heightMapHeight = 0;
 };
-
-

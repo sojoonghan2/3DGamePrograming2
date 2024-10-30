@@ -28,11 +28,11 @@ public:
 
 	float GetWidth() { return static_cast<float>(_desc.Width); }
 	float GetHeight() { return static_cast<float>(_desc.Height); }
+	//ScratchImage GetScratchImage() { return _image; }
 
-	float GetPixel(float x, float z);
-
-private:
+public:
 	ScratchImage			 		_image;
+private:
 	D3D12_RESOURCE_DESC				_desc;
 	ComPtr<ID3D12Resource>			_tex2D;
 
