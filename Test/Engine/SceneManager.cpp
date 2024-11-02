@@ -303,7 +303,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(objectName);
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalPosition(Vec3(100.f + i * 200.f, 100.f, 800.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(100.f + i * 200.f, 200.f, 800.f));
 			obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
 			obj->AddComponent(make_shared<TestObjectScript>());
 			obj->SetStatic(false);

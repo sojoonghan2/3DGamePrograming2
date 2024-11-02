@@ -10,7 +10,7 @@
 
 TestPlayerScript::TestPlayerScript()
 {
-	
+
 }
 
 TestPlayerScript::~TestPlayerScript()
@@ -35,6 +35,18 @@ void TestPlayerScript::LateUpdate()
 	if (PlayerCollision())
 	{
 		AvoidObstacles();
+	}
+
+	if (GetGameObject()->GetTransform()->GetLocalPosition().y < 100)
+	{
+		// 현재 위치를 가져옴
+		Vec3 pos = GetGameObject()->GetTransform()->GetLocalPosition();
+
+		// y 위치를 100으로 설정
+		pos.y = 100.0f;
+
+		// 변경된 위치를 다시 설정
+		GetGameObject()->GetTransform()->SetLocalPosition(pos);
 	}
 }
 
