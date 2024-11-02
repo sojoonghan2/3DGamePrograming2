@@ -14,7 +14,8 @@ public:
 
 	void CollisionTerrain();
 	void AvoidObstacles();
-	bool IsObstacleInFront(const Vec3& direction);
+
+	bool PlayerCollision();
 
 private:
 	float					_speed = 300.f;

@@ -32,21 +32,9 @@ void TestPlayerScript::LateUpdate()
 
 	//std::cout << GetTransform()->GetLocalPosition().x << ", " << GetTransform()->GetLocalPosition().y << ", " << GetTransform()->GetLocalPosition().z << "\n";
 
-	vector<shared_ptr<GameObject>> Objects(10);
-	for (int i = 0; i < Objects.size(); ++i)
+	if (PlayerCollision())
 	{
-		// "OBJ" 뒤에 숫자를 붙여서 이름을 만듦
-		std::wstring objectName = L"OBJ" + std::to_wstring(i);
-
-		// 해당 이름의 오브젝트를 찾고 벡터에 할당
-		Objects[i] = GET_SINGLE(SceneManager)->FindObjectByName(objectName);
-
-		auto is_collision = GET_SINGLE(SceneManager)->Collition(GetGameObject(), Objects[i]);
-		if (is_collision)
-		{
-			std::cout << "플레이어 충돌 발생: ";
-			std::wcout << objectName << "\n";
-		}
+		AvoidObstacles();
 	}
 }
 
@@ -111,31 +99,31 @@ void TestPlayerScript::CollisionTerrain()
 void TestPlayerScript::AvoidObstacles()
 {
 	Vec3 forward = nmz(GetTransform()->GetLook());
-	Vec3 right = nmz(GetTransform()->GetRight());
+	Vec3 upwardAdjustment = Vec3(0.0f, 0.1f, 0.0f); // Y축을 약간 올려 회피할 각도 설정
+	Vec3 newLookDirection = nmz(forward + upwardAdjustment); // 위로 미세 조정된 새로운 방향
 
-	// 정면 레이 캐스팅
-	if (IsObstacleInFront(forward))
-	{
-		// 오른쪽으로 회전
-		Vec3 newDirection = forward + right; // 오른쪽으로 이동
-
-		// 새로운 방향에도 오브젝트가 있는지 확인
-		if (IsObstacleInFront(nmz(newDirection)))
-		{
-			// 왼쪽으로 회전
-			newDirection = forward - right; // 왼쪽으로 이동
-		}
-
-		// 최종 방향으로 이동
-		GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition() + nmz(newDirection) * _speed * DELTA_TIME);
-	}
+	// 새 방향으로 룩 벡터 설정
+	GetTransform()->LookAt(newLookDirection); // 이 함수는 바라보는 방향만 수정
 }
 
-bool TestPlayerScript::IsObstacleInFront(const Vec3& direction)
+bool TestPlayerScript::PlayerCollision()
 {
-	// 여기부터 시작
-	// 광선을 쏘아 충돌 체크 (이 예시에서는 가상의 RayCast 함수를 사용)
-	float distance = 5.0f; // 감지 거리
+	vector<shared_ptr<GameObject>> Objects(10);
+	for (int i = 0; i < Objects.size(); ++i)
+	{
+		// "OBJ" 뒤에 숫자를 붙여서 이름을 만듦
+		std::wstring objectName = L"OBJ" + std::to_wstring(i);
+
+		// 해당 이름의 오브젝트를 찾고 벡터에 할당
+		Objects[i] = GET_SINGLE(SceneManager)->FindObjectByName(objectName);
+
+		auto is_collision = GET_SINGLE(SceneManager)->Collition(GetGameObject(), Objects[i]);
+		if (is_collision)
+		{
+			std::cout << "플레이어 충돌 발생: ";
+			std::wcout << objectName << "\n";
+			return true;
+		}
+	}
 	return false;
-	//return RayCast(GetTransform()->GetLocalPosition(), direction, distance);
 }

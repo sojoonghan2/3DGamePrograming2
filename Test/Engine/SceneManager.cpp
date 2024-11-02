@@ -190,7 +190,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	mainObject->GetTransform()->SetLocalPosition(Vec3(1000.f, 70.f, 100.f));
 	mainObject->AddComponent(make_shared<BoxCollider>());
 	dynamic_pointer_cast<BoxCollider>(mainObject->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
-	dynamic_pointer_cast<BoxCollider>(mainObject->GetCollider())->SetExtents(Vec3(100.f, 100.f, 100.f));
+	dynamic_pointer_cast<BoxCollider>(mainObject->GetCollider())->SetExtents(Vec3(200.f, 200.f, 200.f));
 	scene->AddGameObject(mainObject);
 
 #pragma region FBX & Camera
