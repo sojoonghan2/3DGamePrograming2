@@ -112,7 +112,7 @@ void TestPlayerScript::AvoidObstacles()
 {
 	Vec3 forward = nmz(GetTransform()->GetLook());
 	// Y축을 약간 올려 회피할 각도 설정
-	Vec3 upwardAdjustment = Vec3(0.0f, 0.1f, 0.0f);
+	Vec3 upwardAdjustment = Vec3(0.0f, 0.001f, 0.0f);
 	// 위로 미세 조정된 새로운 방향
 	Vec3 newLookDirection = nmz(forward + upwardAdjustment); 
 
