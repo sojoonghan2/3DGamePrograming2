@@ -33,6 +33,12 @@ void TestBulletScript::LateUpdate()
         if(_parent) GetTransform()->SetLocalPosition(Vec3(_parent->GetTransform()->GetLocalPosition()));
         GetTransform()->SetParent(_parent);
     }
+    if (GetTransform()->GetLocalPosition().x < -1000.f)
+    {
+        _running = false;
+        if (_parent) GetTransform()->SetLocalPosition(Vec3(_parent->GetTransform()->GetLocalPosition()));
+        GetTransform()->SetParent(_parent);
+    }
 
     //std::cout << GetTransform()->GetLocalPosition().x << ", " << GetTransform()->GetLocalPosition().y << ", " << GetTransform()->GetLocalPosition().z << "\n";
 }
