@@ -495,11 +495,11 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"Particle", shader);
 	}
 
-	// Billboard Shader
+	// Billboard Shader 생성
 	{
 		ShaderInfo info =
 		{
-			SHADER_TYPE::FORWARD,          // DEFERRED로 변경 가능
+			SHADER_TYPE::FORWARD,          // DEFERRED 대신 FORWARD로 변경
 			RASTERIZER_TYPE::CULL_NONE,
 			DEPTH_STENCIL_TYPE::LESS,
 			BLEND_TYPE::ALPHA_BLEND,
@@ -661,8 +661,10 @@ void Resources::CreateDefaultMaterial()
 		shared_ptr<Material> material = make_shared<Material>();
 		material->SetShader(shader);
 		material->SetTexture(0, texture);
-		material->SetFloat(0, 50.f);
-		material->SetFloat(1, 50.f);
+		material->SetFloat(0, 10.f);    // halfWidth
+		material->SetFloat(1, 10.f);    // halfHeight
+		material->SetInt(0, 1);         // g_tex_on_0 활성화
+		material->SetVec4(0, Vec4(0.f, 0.f, 1.f, 0.f));  // 카메라 방향
 
 		Add<Material>(L"Billboard", material);
 	}

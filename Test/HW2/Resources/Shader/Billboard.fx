@@ -2,7 +2,6 @@
 #define _BILLBOARD_FX_
 #include "params.fx"
 
-// VS_IN 구조체는 동일하게 사용
 struct VS_IN
 {
     float3 pos : POSITION;
@@ -15,74 +14,77 @@ struct VS_IN
     uint instanceID : SV_InstanceID;
 };
 
-// 정점 셰이더에서 기하 셰이더로 전달할 데이터
 struct VS_OUT
 {
-    float4 posW : POSITION; // 월드 공간의 위치
+    float4 posW : POSITION;
     float2 uv : TEXCOORD;
+    float4 color : COLOR;
 };
 
 VS_OUT VS_Main(VS_IN input)
 {
     VS_OUT output = (VS_OUT) 0;
-    
+   
+    output.color = float4(1, 0, 0, 1); // VS에서는 빨간색
+   
     if (g_int_0 == 1)
     {
-        output.posW = mul(float4(input.pos, 1.f), input.matWorld); // 월드 변환만 수행
+        output.posW = mul(float4(input.pos, 1.f), input.matWorld);
+        output.color = float4(0, 1, 0, 1); // instancing이면 녹색
     }
     else
     {
         output.posW = mul(float4(input.pos, 1.f), g_matWorld);
+        output.color = float4(0, 0, 1, 1); // 아니면 파란색
     }
     output.uv = input.uv;
-    
+   
     return output;
 }
 
-// 기하 셰이더에서 픽셀 셰이더로 전달할 데이터
 struct GS_OUT
 {
     float4 pos : SV_Position;
     float2 uv : TEXCOORD;
     float3 viewPos : POSITION;
+    float4 color : COLOR;
 };
 
-// 기하 셰이더
 [maxvertexcount(4)]
 void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
 {
-    // 카메라를 향하는 빌보드 방향 계산
     float3 up = float3(0.f, 1.f, 0.f);
-    float3 look = normalize(g_vec4_0.xyz); // 카메라 방향
-    float3 right = normalize(cross(up, look));
-    
-    float halfWidth = g_float_0;
-    float halfHeight = g_float_1;
-    
-    // 4개의 정점 생성
+    float3 look = g_vec4_0.xyz; // 카메라 위치에서 정점으로의 방향
+    float3 right = normalize(cross(up, look)); // 빌보드의 오른쪽 방향
+   
+    float halfWidth = g_float_0; // 빌보드의 절반 너비
+    float halfHeight = g_float_1; // 빌보드의 절반 높이
+   
+   // 입력값 디버그
+    input[0].color = float4(halfWidth, halfHeight, 0, 1); // width와 height를 색상으로 표시
+   
     float4 vertices[4];
     vertices[0] = float4(input[0].posW.xyz - right * halfWidth - up * halfHeight, 1.0f); // 좌하단
     vertices[1] = float4(input[0].posW.xyz - right * halfWidth + up * halfHeight, 1.0f); // 좌상단
     vertices[2] = float4(input[0].posW.xyz + right * halfWidth - up * halfHeight, 1.0f); // 우하단
     vertices[3] = float4(input[0].posW.xyz + right * halfWidth + up * halfHeight, 1.0f); // 우상단
-    
+   
     float2 uv[4] =
     {
         float2(0.0f, 1.0f), // 좌하단
-        float2(0.0f, 0.0f), // 좌상단
-        float2(1.0f, 1.0f), // 우하단
-        float2(1.0f, 0.0f) // 우상단
+       float2(0.0f, 0.0f), // 좌상단
+       float2(1.0f, 1.0f), // 우하단
+       float2(1.0f, 0.0f) // 우상단
     };
-    
+   
     GS_OUT output = (GS_OUT) 0;
-    [unroll]
+   [unroll]
     for (int i = 0; i < 4; ++i)
     {
-        // WVP 변환을 한번에 적용
         output.pos = mul(vertices[i], g_matWVP);
-        // 뷰 공간의 위치도 계산
         output.viewPos = mul(vertices[i], g_matWV).xyz;
         output.uv = uv[i];
+        output.color = float4(1, 1, 0, 1); // 노란색으로 강제 출력
         outputStream.Append(output);
     }
 }
@@ -106,8 +108,8 @@ PS_OUT PS_Main(GS_OUT input)
             discard;
     }
         
-    output.position = float4(input.viewPos.xyz, 0.f);
-    output.normal = float4(0.f, 0.f, 1.f, 0.f);
+    output.position = float4(input.viewPos.xyz, 1.f); // w값을 1로 설정
+    output.normal = float4(0.f, 0.f, -1.f, 0.f); // 노말 방향 수정
     output.color = color;
     
     return output;

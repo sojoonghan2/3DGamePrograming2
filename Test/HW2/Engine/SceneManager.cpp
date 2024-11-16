@@ -355,29 +355,30 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region Billboard
 	{
-		shared_ptr<GameObject> billboard = make_shared<GameObject>();
-		billboard->SetName(L"Billboard");
-		billboard->AddComponent(make_shared<Transform>());
-		billboard->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 200.f));  // 카메라 앞쪽으로
-		billboard->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		billboard->SetStatic(false);
-		billboard->SetCheckFrustum(false);
-
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		for (int i{}; i < 1; ++i)
 		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadPointMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Billboard")->Clone();
-			material->SetInt(0, 1);    // g_tex_on_0 활성화
-			material->SetFloat(0, 100.f);
-			material->SetFloat(1, 100.f);
-			meshRenderer->SetMaterial(material);
-		}
-		billboard->AddComponent(meshRenderer);
+			shared_ptr<GameObject> billboard = make_shared<GameObject>();
+			wstring billboardName = L"Billboard" + to_wstring(i);
+			billboard->SetName(billboardName);
+			billboard->AddComponent(make_shared<Transform>());
+			billboard->GetTransform()->SetLocalPosition(Vec3(1000.f, 300.f, 300.f));
+			billboard->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			billboard->SetStatic(false);
+			billboard->SetCheckFrustum(false);
 
-		scene->AddGameObject(billboard);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadPointMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Billboard");
+				meshRenderer->SetMaterial(material->Clone());
+			}
+			billboard->AddComponent(meshRenderer);
+
+			scene->AddGameObject(billboard);
+		}
 	}
 #pragma endregion
 
