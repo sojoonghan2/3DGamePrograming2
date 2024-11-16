@@ -19,16 +19,16 @@ void TestObjectScript::LateUpdate()
 	Vec3 pos = GetTransform()->GetLocalPosition();
 
 	if (INPUT->GetButton(KEY_TYPE::I))
-		pos += nmz(GetTransform()->GetLook()) * _speed * DELTA_TIME;
+		pos += Normalize(GetTransform()->GetLook()) * _speed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::K))
-		pos -= nmz(GetTransform()->GetLook()) * _speed * DELTA_TIME;
+		pos -= Normalize(GetTransform()->GetLook()) * _speed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::J))
-		pos -= nmz(GetTransform()->GetRight()) * _speed * DELTA_TIME;
+		pos -= Normalize(GetTransform()->GetRight()) * _speed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::L))
-		pos += nmz(GetTransform()->GetRight()) * _speed * DELTA_TIME;
+		pos += Normalize(GetTransform()->GetRight()) * _speed * DELTA_TIME;
 
 	auto bulletObject = GET_SINGLE(SceneManager)->FindObjectByName(L"Bullet");
 

@@ -18,54 +18,45 @@ TestBulletScript::~TestBulletScript()
 
 void TestBulletScript::LateUpdate()
 {
-	KeyboardInput();
-	MouseInput();
+    KeyboardInput();
 
     if (_running)
     {
-        Vec3 pos = GetTransform()->GetLocalPosition();
-        pos += nmz(_parentLook) * _speed * DELTA_TIME; // Look 벡터를 이용하여 이동
-        GetTransform()->SetLocalPosition(pos);
-    }
-    if (GetTransform()->GetLocalPosition().z > 3000.f)
-    {
-        _running = false;
-        if(_parent) GetTransform()->SetLocalPosition(Vec3(_parent->GetTransform()->GetLocalPosition()));
-        GetTransform()->SetParent(_parent);
-    }
-    if (GetTransform()->GetLocalPosition().x < -1000.f)
-    {
-        _running = false;
-        if (_parent) GetTransform()->SetLocalPosition(Vec3(_parent->GetTransform()->GetLocalPosition()));
-        GetTransform()->SetParent(_parent);
-    }
+        // 시간 업데이트
+        _currentTime += DELTA_TIME;
 
-    //std::cout << GetTransform()->GetLocalPosition().x << ", " << GetTransform()->GetLocalPosition().y << ", " << GetTransform()->GetLocalPosition().z << "\n";
+        // 총알 이동
+        Vec3 pos = GetTransform()->GetLocalPosition();
+        pos += Normalize(_parentLook) * _speed * DELTA_TIME;
+        GetTransform()->SetLocalPosition(pos);
+
+        // 시간이 다 되면 초기화
+        if (_currentTime >= _lifeTime)
+        {
+            _running = false;
+            _currentTime = 0.f;  // 타이머 리셋
+            if (_parent)
+            {
+                GetTransform()->SetLocalPosition(Vec3(_parent->GetTransform()->GetLocalPosition()));
+                GetTransform()->SetParent(_parent);
+            }
+        }
+    }
 }
 
 void TestBulletScript::KeyboardInput()
 {
-    Vec3 pos = GetTransform()->GetLocalPosition();
-
     if (INPUT->GetButton(KEY_TYPE::SPACE))
     {
-        // 총알 발사 시작
         if (!_running) {
             _running = true;
-
+            _currentTime = 0.f;  // 타이머 초기화
             _parent = GetTransform()->GetParent().lock();
-            if (_parent)_parentLook = _parent->GetLook();
-
+            if (_parent) _parentLook = _parent->GetLook();
             GetTransform()->RemoveParent();
 
-            // 부모의 위치로 총알 위치 초기화
-            pos = _parent ? _parent->GetLocalPosition() : pos;
+            Vec3 pos = _parent ? _parent->GetLocalPosition() : GetTransform()->GetLocalPosition();
+            GetTransform()->SetLocalPosition(pos);
         }
-        // 총알의 위치를 업데이트
-        GetTransform()->SetLocalPosition(pos);
     }
-}
-
-void TestBulletScript::MouseInput()
-{
 }

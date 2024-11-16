@@ -55,16 +55,16 @@ void TestPlayerScript::KeyboardInput()
 	Vec3 pos = GetTransform()->GetLocalPosition();
 
 	if (INPUT->GetButton(KEY_TYPE::W))
-		pos += nmz(GetTransform()->GetLook()) * _speed * DELTA_TIME;
+		pos += Normalize(GetTransform()->GetLook()) * _speed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::S))
-		pos -= nmz(GetTransform()->GetLook()) * _speed * DELTA_TIME;
+		pos -= Normalize(GetTransform()->GetLook()) * _speed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::A))
-		pos -= nmz(GetTransform()->GetRight()) * _speed * DELTA_TIME;
+		pos -= Normalize(GetTransform()->GetRight()) * _speed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::D))
-		pos += nmz(GetTransform()->GetRight()) * _speed * DELTA_TIME;
+		pos += Normalize(GetTransform()->GetRight()) * _speed * DELTA_TIME;
 
 	GetTransform()->SetLocalPosition(pos);
 
@@ -110,11 +110,11 @@ void TestPlayerScript::CollisionTerrain()
 
 void TestPlayerScript::AvoidObstacles()
 {
-	Vec3 forward = nmz(GetTransform()->GetLook());
+	Vec3 forward = Normalize(GetTransform()->GetLook());
 	// Y축을 약간 올려 회피할 각도 설정
 	Vec3 upwardAdjustment = Vec3(0.0f, 0.001f, 0.0f);
 	// 위로 미세 조정된 새로운 방향
-	Vec3 newLookDirection = nmz(forward + upwardAdjustment); 
+	Vec3 newLookDirection = Normalize(forward + upwardAdjustment); 
 
 	// 새 방향으로 룩 벡터 설정
 	GetTransform()->LookAt(newLookDirection);
