@@ -495,6 +495,31 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"Particle", shader);
 	}
 
+	// Billboard Shader
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::FORWARD,          // DEFERRED로 변경 가능
+			RASTERIZER_TYPE::CULL_NONE,
+			DEPTH_STENCIL_TYPE::LESS,
+			BLEND_TYPE::ALPHA_BLEND,
+			D3D_PRIMITIVE_TOPOLOGY_POINTLIST
+		};
+
+		ShaderArg arg =
+		{
+			"VS_Main",
+			"",
+			"",
+			"GS_Main",
+			"PS_Main"
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\billboard.fx", info, arg);
+		Add<Shader>(L"Billboard", shader);
+	}
+
 	// ComputeParticle
 	{
 		shared_ptr<Shader> shader = make_shared<Shader>();
@@ -626,6 +651,20 @@ void Resources::CreateDefaultMaterial()
 		shared_ptr<Material> material = make_shared<Material>();
 		material->SetShader(shader);
 		Add<Material>(L"Particle", material);
+	}
+
+	// Billboard Material
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Billboard");
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Flower", L"..\\Resources\\Texture\\Flower.png");
+
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, texture);
+		material->SetFloat(0, 50.f);
+		material->SetFloat(1, 50.f);
+
+		Add<Material>(L"Billboard", material);
 	}
 
 	// ComputeParticle
