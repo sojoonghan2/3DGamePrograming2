@@ -361,7 +361,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			wstring billboardName = L"Billboard" + to_wstring(i);
 			billboard->SetName(billboardName);
 			billboard->AddComponent(make_shared<Transform>());
-			billboard->GetTransform()->SetLocalPosition(Vec3(1000.f, 300.f, 300.f));
+			billboard->GetTransform()->SetLocalPosition(Vec3(1000.f, 100.f, 300.f));
 			billboard->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			billboard->SetStatic(false);
 			billboard->SetCheckFrustum(false);
