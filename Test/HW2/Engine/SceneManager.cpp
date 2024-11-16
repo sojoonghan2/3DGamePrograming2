@@ -230,7 +230,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		for (int i{}; i < 50; ++i)
 		{
 			shared_ptr<GameObject> bullet = make_shared<GameObject>();
-			wstring bulletName = L"Bullet";
+			wstring bulletName = L"Bullet" + to_wstring(i);
 			bullet->SetName(bulletName);
 			bullet->AddComponent(make_shared<Transform>());
 			bullet->AddComponent(make_shared<TestBulletScript>());

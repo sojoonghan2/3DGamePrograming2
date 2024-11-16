@@ -190,4 +190,4 @@ extern unique_ptr<class Engine> GEngine;
 wstring s2ws(const string& s);
 string ws2s(const wstring& s);
 
-Vec3 nmz(Vec3 tmp);
+Vec3 Normalize(Vec3 tmp);

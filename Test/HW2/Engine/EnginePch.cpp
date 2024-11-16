@@ -26,7 +26,7 @@ string ws2s(const wstring& s)
 	return r;
 }
 
-Vec3 nmz(Vec3 tmp) {
+Vec3 Normalize(Vec3 tmp) {
 	float length = std::sqrt(tmp.x * tmp.x + tmp.y * tmp.y + tmp.z * tmp.z);
 	// 벡터의 길이가 0일 경우 정규화 할 수 없으므로 체크
 	if (length == 0) {
