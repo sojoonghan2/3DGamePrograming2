@@ -8,8 +8,18 @@
 #include "Timer.h"
 #include "SceneManager.h"
 
+float TestBulletScript::s_lastFireTime = 0.f;
+const float TestBulletScript::s_fireInterval = 2.f; // 1초 간격으로 발사
+int32 TestBulletScript::s_currentBulletIndex = 0;
+
 TestBulletScript::TestBulletScript()
 {
+    _myIndex = s_currentBulletIndex;
+    s_currentBulletIndex++;
+
+    // 50개의 총알을 순환하도록
+    if (s_currentBulletIndex >= 50)
+        s_currentBulletIndex = 0;
 }
 
 TestBulletScript::~TestBulletScript()
@@ -19,22 +29,17 @@ TestBulletScript::~TestBulletScript()
 void TestBulletScript::LateUpdate()
 {
     KeyboardInput();
-
     if (_running)
     {
-        // 시간 업데이트
         _currentTime += DELTA_TIME;
-
-        // 총알 이동
         Vec3 pos = GetTransform()->GetLocalPosition();
         pos += Normalize(_parentLook) * _speed * DELTA_TIME;
         GetTransform()->SetLocalPosition(pos);
 
-        // 시간이 다 되면 초기화
         if (_currentTime >= _lifeTime)
         {
             _running = false;
-            _currentTime = 0.f;  // 타이머 리셋
+            _currentTime = 0.f;
             if (_parent)
             {
                 GetTransform()->SetLocalPosition(Vec3(_parent->GetTransform()->GetLocalPosition()));
@@ -48,15 +53,26 @@ void TestBulletScript::KeyboardInput()
 {
     if (INPUT->GetButton(KEY_TYPE::SPACE))
     {
-        if (!_running) {
+        s_lastFireTime += DELTA_TIME;
+
+        if (!_running &&
+            s_lastFireTime >= s_fireInterval &&
+            (_myIndex == s_currentBulletIndex))  // 수정된 부분
+        {
+            s_lastFireTime = 0.f;
+            s_currentBulletIndex = (s_currentBulletIndex + 1) % 50;  // 수정된 부분
+
             _running = true;
-            _currentTime = 0.f;  // 타이머 초기화
+            _currentTime = 0.f;
             _parent = GetTransform()->GetParent().lock();
             if (_parent) _parentLook = _parent->GetLook();
             GetTransform()->RemoveParent();
-
             Vec3 pos = _parent ? _parent->GetLocalPosition() : GetTransform()->GetLocalPosition();
             GetTransform()->SetLocalPosition(pos);
         }
+    }
+    else
+    {
+        s_lastFireTime = s_fireInterval;
     }
 }
