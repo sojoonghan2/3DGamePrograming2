@@ -9,11 +9,10 @@ class GameObject;
 
 class BillboardManager
 {
-public:
-    BillboardManager();
-    ~BillboardManager();
+    DECLARE_SINGLE(BillboardManager);
 
-    // 초기화 함수: 최대 빌보드 개수 설정
+public:
+     // 초기화 함수: 최대 빌보드 개수 설정
     void Init(uint32 maxCount);
 
     // 빌보드 렌더링

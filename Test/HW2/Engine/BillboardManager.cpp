@@ -5,15 +5,6 @@
 #include "MeshRenderer.h"
 #include "Camera.h"
 
-BillboardManager::BillboardManager()
-{
-}
-
-BillboardManager::~BillboardManager()
-{
-    Clear();
-}
-
 void BillboardManager::Init(uint32 maxCount)
 {
     Clear(); // 기존 데이터 초기화
