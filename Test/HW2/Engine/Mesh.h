@@ -20,6 +20,7 @@ public:
 	void Create(const vector<Vertex>& vertexBuffer, const vector<uint32>& indexbuffer);
 	void Render(uint32 instanceCount = 1, uint32 idx = 0);
 	void Render(shared_ptr<class InstancingBuffer>& buffer, uint32 idx = 0);
+	void Render(shared_ptr<class BillboardBuffer>& buffer, uint32 idx = 0);
 
 	static shared_ptr<Mesh> CreateFromFBX(const struct FbxMeshInfo* meshInfo);
 

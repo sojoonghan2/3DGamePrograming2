@@ -31,6 +31,7 @@ public:
 
 	void Render();
 	void Render(shared_ptr<class InstancingBuffer>& buffer);
+	void Render(shared_ptr<class BillboardBuffer>& buffer);
 	void RenderShadow();
 
 	uint64 GetInstanceID();

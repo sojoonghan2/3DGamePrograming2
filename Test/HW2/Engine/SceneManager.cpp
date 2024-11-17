@@ -23,6 +23,9 @@
 #include "BoxCollider.h"
 #include "MeshData.h"
 
+#include "BillboardBuffer.h"
+#include "BillboardManager.h"
+
 void SceneManager::Update()
 {
 	if (_activeScene == nullptr)
@@ -204,7 +207,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Helicopter");
 			gameObject->GetTransform()->SetParent(mainObject->GetTransform());
-			gameObject->SetCheckFrustum(false);
+			gameObject->SetCheckFrustum(true);
 			gameObject->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
 			scene->AddGameObject(gameObject);
 		}
@@ -303,11 +306,11 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			wstring objectName = L"OBJ" + to_wstring(i);
 			obj->SetName(objectName);
 			obj->AddComponent(make_shared<Transform>());
-			obj->SetCheckFrustum(false);
+			obj->SetCheckFrustum(true);
 			obj->GetTransform()->SetLocalPosition(Vec3(100.f + i * 200.f, 200.f, 800.f));
 			obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
 			obj->AddComponent(make_shared<TestObjectScript>());
-			obj->SetStatic(false);
+			obj->SetStatic(true);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
 				shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
@@ -355,28 +358,41 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region Billboard
 	{
-		for (int i{}; i < 1; ++i)
+		GET_SINGLE(BillboardManager)->Init(100);
+
+		shared_ptr<Mesh> pointMesh = GET_SINGLE(Resources)->LoadPointMesh();
+		shared_ptr<Material> billboardMaterial = GET_SINGLE(Resources)->Get<Material>(L"Billboard");
+
+		// 현재는 최대 30송이밖에 안심어짐
+		for (int i = 0; i < 100; ++i)
 		{
 			shared_ptr<GameObject> billboard = make_shared<GameObject>();
 			wstring billboardName = L"Billboard" + to_wstring(i);
 			billboard->SetName(billboardName);
 			billboard->AddComponent(make_shared<Transform>());
-			billboard->GetTransform()->SetLocalPosition(Vec3(1000.f, 100.f, 300.f));
-			billboard->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-			billboard->SetStatic(false);
-			billboard->SetCheckFrustum(false);
+			billboard->SetCheckFrustum(true);
+			billboard->SetStatic(true);
 
+			// Transform 설정
+			billboard->GetTransform()->SetLocalPosition(Vec3(500.f + i * 10.f, 100.f, 500.f));
+			billboard->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+
+			// MeshRenderer 설정
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadPointMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Billboard");
-				meshRenderer->SetMaterial(material->Clone());
-			}
+			meshRenderer->SetMesh(pointMesh);
+			meshRenderer->SetMaterial(billboardMaterial->Clone());
 			billboard->AddComponent(meshRenderer);
 
+			// BillboardParams 생성
+			BillboardParams params;
+			params.position = billboard->GetTransform()->GetWorldPosition();
+			params.scale = billboard->GetTransform()->GetLocalScale().x; // 균일 스케일 가정
+			params.color = Vec4(1.f, 1.f, 1.f, 1.f); // 기본 흰색
+
+			// BillboardManager에 데이터 추가
+			GET_SINGLE(BillboardManager)->AddParam(meshRenderer->GetInstanceID(), params);
+
+			// Scene에 GameObject 추가
 			scene->AddGameObject(billboard);
 		}
 	}

@@ -165,6 +165,12 @@
     <ClCompile Include="TestCameraScript.cpp">
       <Filter>Object\Test</Filter>
     </ClCompile>
+    <ClCompile Include="BillboardBuffer.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="BillboardManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -303,6 +309,12 @@
       <Filter>Object\Test</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="BillboardBuffer.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="BillboardManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
   </ItemGroup>

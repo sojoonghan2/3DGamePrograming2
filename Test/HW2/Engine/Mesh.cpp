@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include "Material.h"
 #include "InstancingBuffer.h"
+#include "BillboardBuffer.h"
 #include "FBXLoader.h"
 
 Mesh::Mesh() : Object(OBJECT_TYPE::MESH)
@@ -32,6 +33,17 @@ void Mesh::Render(uint32 instanceCount, uint32 idx)
 }
 
 void Mesh::Render(shared_ptr<InstancingBuffer>& buffer, uint32 idx)
+{
+	D3D12_VERTEX_BUFFER_VIEW bufferViews[] = { _vertexBufferView, buffer->GetBufferView() };
+	GRAPHICS_CMD_LIST->IASetVertexBuffers(0, 2, bufferViews);
+	GRAPHICS_CMD_LIST->IASetIndexBuffer(&_vecIndexInfo[idx].bufferView);
+
+	GEngine->GetGraphicsDescHeap()->CommitTable();
+
+	GRAPHICS_CMD_LIST->DrawIndexedInstanced(_vecIndexInfo[idx].count, buffer->GetCount(), 0, 0, 0);
+}
+
+void Mesh::Render(shared_ptr<BillboardBuffer>& buffer, uint32 idx)
 {
 	D3D12_VERTEX_BUFFER_VIEW bufferViews[] = { _vertexBufferView, buffer->GetBufferView() };
 	GRAPHICS_CMD_LIST->IASetVertexBuffers(0, 2, bufferViews);

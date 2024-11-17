@@ -85,19 +85,15 @@ void GS_Main(point VS_OUT input[1], inout TriangleStream<GS_OUT> outputStream)
 
 struct PS_OUT
 {
-    float4 position : SV_Target0;
-    float4 color : SV_Target1;
+    float4 color : SV_Target0;
 };
 
 PS_OUT PS_Main(GS_OUT input)
 {
-    // 구조체 초기화(모두 0으로)
     PS_OUT output = (PS_OUT) 0;
     
-    // 기본 색상 흰색으로 설정
     float4 color = float4(1.f, 1.f, 1.f, 1.f);
     
-    // g_tex_on_0가 활성화 되어있다면 텍스쳐 사용
     if (g_tex_on_0 == 1)
     {
         color = g_tex_0.Sample(g_sam_0, input.uv);
