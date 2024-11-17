@@ -5,6 +5,16 @@
 #include "MeshRenderer.h"
 #include "Camera.h"
 
+void BillboardManager::Init(uint32 maxCount)
+{
+    // 모든 InstanceID에 대해 BillboardBuffer 초기화
+    for (auto& pair : _buffers)
+    {
+        pair.second = std::make_shared<BillboardBuffer>();
+        pair.second->Init(maxCount);
+    }
+}
+
 void BillboardManager::Render(std::vector<std::shared_ptr<GameObject>>& gameObjects)
 {
     std::map<uint64, std::vector<std::shared_ptr<GameObject>>> cache;
