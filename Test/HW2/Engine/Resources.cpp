@@ -499,7 +499,7 @@ void Resources::CreateDefaultShader()
 	{
 		ShaderInfo info =
 		{
-			SHADER_TYPE::FORWARD,          // DEFERRED 대신 FORWARD로 변경
+			SHADER_TYPE::FORWARD,
 			RASTERIZER_TYPE::CULL_NONE,
 			DEPTH_STENCIL_TYPE::LESS,
 			BLEND_TYPE::ALPHA_BLEND,
@@ -660,11 +660,11 @@ void Resources::CreateDefaultMaterial()
 
 		shared_ptr<Material> material = make_shared<Material>();
 		material->SetShader(shader);
-		material->SetTexture(0, texture);
-		material->SetFloat(0, 10.f);    // halfWidth
-		material->SetFloat(1, 10.f);    // halfHeight
-		material->SetInt(0, 1);         // g_tex_on_0 활성화
-		material->SetVec4(0, Vec4(0.f, 0.f, 1.f, 0.f));  // 카메라 방향
+		material->SetTexture(0, texture); // 텍스처 연결
+		material->SetFloat(0, 10.f);
+		material->SetFloat(1, 10.f);
+		material->SetInt(0, 1);
+		material->SetVec4(0, Vec4(0.f, 0.f, 1.f, 0.f)); // 카메라 방향 설정
 
 		Add<Material>(L"Billboard", material);
 	}

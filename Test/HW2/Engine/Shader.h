@@ -3,12 +3,12 @@
 
 enum class SHADER_TYPE : uint8
 {
-	DEFERRED,
-	FORWARD,
-	LIGHTING,
-	PARTICLE,
-	COMPUTE,
-	SHADOW,
+	DEFERRED, // 지연 렌더링
+	FORWARD,  // 일반적인 전방 렌더링
+	LIGHTING, // 조명
+	PARTICLE, // 파티클
+	COMPUTE, // 컴퓨트 셰이더
+	SHADOW, // 그림자
 };
 
 enum class RASTERIZER_TYPE : uint8
