@@ -23,6 +23,9 @@
 #include "BoxCollider.h"
 #include "MeshData.h"
 
+#include "BillboardBuffer.h"
+#include "BillboardManager.h"
+
 void SceneManager::Update()
 {
 	if (_activeScene == nullptr)
