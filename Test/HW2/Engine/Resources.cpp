@@ -495,7 +495,7 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"Particle", shader);
 	}
 
-	// Billboard Shader 생성
+	// Billboard Shader
 	{
 		ShaderInfo info =
 		{
@@ -664,7 +664,6 @@ void Resources::CreateDefaultMaterial()
 		material->SetFloat(0, 10.f);
 		material->SetFloat(1, 10.f);
 		material->SetInt(0, 1);
-		material->SetVec4(0, Vec4(0.f, 0.f, 1.f, 0.f)); // 카메라 방향 설정
 
 		Add<Material>(L"Billboard", material);
 	}
