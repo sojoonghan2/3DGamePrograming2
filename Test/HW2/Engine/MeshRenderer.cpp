@@ -4,6 +4,7 @@
 #include "Material.h"
 #include "Transform.h"
 #include "InstancingBuffer.h"
+#include "BillboardBuffer.h"
 #include "Resources.h"
 
 MeshRenderer::MeshRenderer() : Component(COMPONENT_TYPE::MESH_RENDERER)
@@ -41,6 +42,21 @@ void MeshRenderer::Render()
 }
 
 void MeshRenderer::Render(shared_ptr<InstancingBuffer>& buffer)
+{
+	for (uint32 i = 0; i < _materials.size(); i++)
+	{
+		shared_ptr<Material>& material = _materials[i];
+
+		if (material == nullptr || material->GetShader() == nullptr)
+			continue;
+
+		buffer->PushData();
+		material->PushGraphicsData();
+		_mesh->Render(buffer, i);
+	}
+}
+
+void MeshRenderer::Render(shared_ptr<BillboardBuffer>& buffer)
 {
 	for (uint32 i = 0; i < _materials.size(); i++)
 	{
