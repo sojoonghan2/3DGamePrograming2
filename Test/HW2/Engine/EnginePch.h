@@ -61,6 +61,10 @@ using namespace Microsoft::WRL;
 #pragma comment(lib, "FBX\\release\\zlib-md.lib")
 #endif
 
+// 콘솔 창 출력
+#include <iostream>
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+
 // 각종 typedef
 using int8		= __int8;
 using int16		= __int16;

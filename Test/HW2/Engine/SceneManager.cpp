@@ -353,6 +353,35 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
+#pragma region Billboard
+	{
+		for (int i{}; i < 1; ++i)
+		{
+			shared_ptr<GameObject> billboard = make_shared<GameObject>();
+			wstring billboardName = L"Billboard" + to_wstring(i);
+			billboard->SetName(billboardName);
+			billboard->AddComponent(make_shared<Transform>());
+			billboard->GetTransform()->SetLocalPosition(Vec3(1000.f, 100.f, 300.f));
+			billboard->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			billboard->SetStatic(false);
+			billboard->SetCheckFrustum(false);
+
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadPointMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Billboard");
+				meshRenderer->SetMaterial(material->Clone());
+			}
+			billboard->AddComponent(meshRenderer);
+
+			scene->AddGameObject(billboard);
+		}
+	}
+#pragma endregion
+
 #pragma region UI_Test
 	shared_ptr<GameObject> obj = make_shared<GameObject>();
 	obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI

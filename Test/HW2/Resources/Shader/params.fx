@@ -1,6 +1,7 @@
 #ifndef _PARAMS_FX_
 #define _PARAMS_FX_
 
+// 조명 색상
 struct LightColor
 {
     float4      diffuse;
@@ -8,6 +9,7 @@ struct LightColor
     float4      specular;
 };
 
+// 조명 기본
 struct LightInfo
 {
     LightColor  color;
@@ -19,6 +21,7 @@ struct LightInfo
     int  	    padding;
 };
 
+// 전역 조명
 cbuffer GLOBAL_PARAMS : register(b0)
 {
     int         g_lightCount;
@@ -26,6 +29,7 @@ cbuffer GLOBAL_PARAMS : register(b0)
     LightInfo   g_light[50];
 }
 
+// 변환 행렬
 cbuffer TRANSFORM_PARAMS : register(b1)
 {
     row_major matrix g_matWorld;
@@ -36,6 +40,7 @@ cbuffer TRANSFORM_PARAMS : register(b1)
     row_major matrix g_matViewInv;
 };
 
+// 머터리얼
 cbuffer MATERIAL_PARAMS : register(b2)
 {
     int     g_int_0;

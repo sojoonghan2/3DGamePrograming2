@@ -495,6 +495,31 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"Particle", shader);
 	}
 
+	// Billboard Shader 생성
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::FORWARD,
+			RASTERIZER_TYPE::CULL_NONE,
+			DEPTH_STENCIL_TYPE::LESS,
+			BLEND_TYPE::ALPHA_BLEND,
+			D3D_PRIMITIVE_TOPOLOGY_POINTLIST
+		};
+
+		ShaderArg arg =
+		{
+			"VS_Main",
+			"",
+			"",
+			"GS_Main",
+			"PS_Main"
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\billboard.fx", info, arg);
+		Add<Shader>(L"Billboard", shader);
+	}
+
 	// ComputeParticle
 	{
 		shared_ptr<Shader> shader = make_shared<Shader>();
@@ -626,6 +651,22 @@ void Resources::CreateDefaultMaterial()
 		shared_ptr<Material> material = make_shared<Material>();
 		material->SetShader(shader);
 		Add<Material>(L"Particle", material);
+	}
+
+	// Billboard Material
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Billboard");
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Flower", L"..\\Resources\\Texture\\Flower.png");
+
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, texture); // 텍스처 연결
+		material->SetFloat(0, 10.f);
+		material->SetFloat(1, 10.f);
+		material->SetInt(0, 1);
+		material->SetVec4(0, Vec4(0.f, 0.f, 1.f, 0.f)); // 카메라 방향 설정
+
+		Add<Material>(L"Billboard", material);
 	}
 
 	// ComputeParticle
