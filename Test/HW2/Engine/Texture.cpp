@@ -198,3 +198,19 @@ void Texture::CreateFromResource(ComPtr<ID3D12Resource> tex2D)
 		DEVICE->CreateShaderResourceView(_tex2D.Get(), &srvDesc, _srvHeapBegin);
 	}
 }
+
+float Texture::GetPixelValue(int x, int y) const
+{
+	const DirectX::Image* image = _image.GetImages();
+	if (!image || x < 0 || y < 0 || x >= static_cast<int>(_image.GetMetadata().width) || y >= static_cast<int>(_image.GetMetadata().height))
+		return 0.0f;
+
+	const size_t rowPitch = image->rowPitch;
+	const size_t pixelSize = 4;
+
+	const uint8_t* pixelData = image->pixels + y * rowPitch + x * pixelSize;
+
+	float value = *reinterpret_cast<const float*>(pixelData);
+
+	return value;
+}

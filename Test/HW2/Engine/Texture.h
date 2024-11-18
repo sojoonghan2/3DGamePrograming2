@@ -28,7 +28,7 @@ public:
 
 	float GetWidth() { return static_cast<float>(_desc.Width); }
 	float GetHeight() { return static_cast<float>(_desc.Height); }
-	//ScratchImage GetScratchImage() { return _image; }
+	float GetPixelValue(int x, int y) const;
 
 public:
 	ScratchImage			 		_image;

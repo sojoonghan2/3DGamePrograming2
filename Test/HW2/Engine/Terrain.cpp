@@ -61,52 +61,25 @@ void Terrain::FinalUpdate()
 
 float Terrain::GetHeight(float x, float z)
 {
-    if (!_heightMap)
-        return 0.0f;
+	// 높이 맵이 없는 경우 기본값 반환
+	if (_heightMap == nullptr)
+		return 0.0f;
 
-    // 높이 맵 이미지 데이터 확인
-    const Image* img = _heightMap->_image.GetImage(0, 0, 0);
-    if (!img)
-        return 0.0f;
+	// 월드 좌표를 텍스처 좌표로 변환
+	float u = (x + (_sizeX / 2.0f)) / static_cast<float>(_heightMapWidth);
+	float v = (z + (_sizeZ / 2.0f)) / static_cast<float>(_heightMapHeight);
 
-    int width = static_cast<int>(img->width);
-    int height = static_cast<int>(img->height);
+	// 텍스처 좌표가 범위를 벗어나는 경우 클램핑
+	u = std::clamp(u, 0.0f, 1.0f);
+	v = std::clamp(v, 0.0f, 1.0f);
 
-    // 월드 좌표를 텍스처 좌표로 변환
-    float terrainWidth = _sizeX * 50.0f;  // 예: 터레인의 가로 폭 (m)
-    float terrainHeight = _sizeZ * 50.0f; // 예: 터레인의 세로 폭 (m)
-    float scaledX = (x / terrainWidth) * (width - 1);
-    float scaledZ = (z / terrainHeight) * (height - 1);
+	// 텍스처 좌표를 픽셀 좌표로 변환
+	int pixelX = static_cast<int>(u * _heightMapWidth);
+	int pixelY = static_cast<int>(v * _heightMapHeight);
 
-    // 좌상단 픽셀 좌표
-    int gridX = static_cast<int>(scaledX);
-    int gridZ = static_cast<int>(scaledZ);
+	// 높이 맵에서 높이값 샘플링
+	const float height = _heightMap->GetPixelValue(pixelX, pixelY);
 
-    // 범위 검사
-    if (gridX < 0 || gridX >= width - 1 || gridZ < 0 || gridZ >= height - 1)
-        return 0.0f;
-
-    // 네 개의 픽셀에서 높이 값 추출
-    uint8_t* pixelData00 = img->pixels + gridZ * img->rowPitch + gridX * 4;          // 좌상단
-    uint8_t* pixelData10 = img->pixels + gridZ * img->rowPitch + (gridX + 1) * 4;    // 우상단
-    uint8_t* pixelData01 = img->pixels + (gridZ + 1) * img->rowPitch + gridX * 4;    // 좌하단
-    uint8_t* pixelData11 = img->pixels + (gridZ + 1) * img->rowPitch + (gridX + 1) * 4; // 우하단
-
-    // RGBA 중 R 채널 값을 높이 값으로 가정
-    float h00 = pixelData00[0] / 255.0f;
-    float h10 = pixelData10[0] / 255.0f;
-    float h01 = pixelData01[0] / 255.0f;
-    float h11 = pixelData11[0] / 255.0f;
-
-    // 소수점 부분을 사용한 보간 가중치
-    float dx = scaledX - gridX;
-    float dz = scaledZ - gridZ;
-
-    // 빌리니어 보간을 통한 최종 높이 계산
-    float h0 = h00 * (1 - dx) + h10 * dx;
-    float h1 = h01 * (1 - dx) + h11 * dx;
-    float finalHeight = h0 * (1 - dz) + h1 * dz;
-
-    //std::cout << "Terrain yPos: " << finalHeight * -200 << "\n";
-    return finalHeight * 100.f - 200.f; // 실제 높이로 변환
+	// 샘플링된 높이를 반환
+	return height;
 }

@@ -106,6 +106,9 @@ void TestPlayerScript::CollisionTerrain()
 		std::cout << "second: " << _terrain->GetTerrain()->GetHeight(GetTransform()->GetLocalPosition().x, GetTransform()->GetLocalPosition().z) << "\n";
 		std::cout << "터레인 충돌 발생\n";
 	}
+
+	// 하이트값 출력 코드
+	std::cout << _terrain->GetTerrain()->GetHeight(GetTransform()->GetLocalPosition().x, GetTransform()->GetLocalPosition().z) << "\n";
 }
 
 void TestPlayerScript::AvoidObstacles()
