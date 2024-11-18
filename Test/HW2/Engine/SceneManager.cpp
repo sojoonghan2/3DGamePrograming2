@@ -333,7 +333,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			particle->GetTransform()->SetParent(obj->GetTransform());
 			shared_ptr<ParticleSystem> particleSystem = make_shared<ParticleSystem>();
 			particle->AddComponent(particleSystem);
-			particle->SetCheckFrustum(false);
+			particle->SetCheckFrustum(true);
 			particleSystem->ParticleStop();
 			scene->AddGameObject(particle);
 		}
