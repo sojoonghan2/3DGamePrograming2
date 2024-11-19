@@ -17,6 +17,14 @@ public:
 
 	bool PlayerCollision();
 
+	void ClearConsole() {
+#ifdef _WIN32
+		system("cls"); // Windows에서 콘솔 클리어
+#else
+		system("clear"); // Linux, macOS에서 콘솔 클리어
+#endif
+	}
+
 private:
 	float					_speed = 300.f;
 	POINT					m_ptOldCursorPos;

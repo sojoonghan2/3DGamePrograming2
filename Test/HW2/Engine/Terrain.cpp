@@ -61,25 +61,5 @@ void Terrain::FinalUpdate()
 
 float Terrain::GetHeight(float x, float z)
 {
-	// 높이 맵이 없는 경우 기본값 반환
-	if (_heightMap == nullptr)
-		return 0.0f;
-
-	// 월드 좌표를 텍스처 좌표로 변환
-	float u = (x + (_sizeX / 2.0f)) / static_cast<float>(_heightMapWidth);
-	float v = (z + (_sizeZ / 2.0f)) / static_cast<float>(_heightMapHeight);
-
-	// 텍스처 좌표가 범위를 벗어나는 경우 클램핑
-	u = std::clamp(u, 0.0f, 1.0f);
-	v = std::clamp(v, 0.0f, 1.0f);
-
-	// 텍스처 좌표를 픽셀 좌표로 변환
-	int pixelX = static_cast<int>(u * _heightMapWidth);
-	int pixelY = static_cast<int>(v * _heightMapHeight);
-
-	// 높이 맵에서 높이값 샘플링
-	const float height = _heightMap->GetPixelValue(pixelX, pixelY);
-
-	// 샘플링된 높이를 반환
-	return height;
+	return 0;
 }

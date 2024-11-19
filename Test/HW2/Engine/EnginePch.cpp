@@ -34,3 +34,13 @@ Vec3 Normalize(Vec3 tmp) {
 	}
 	return Vec3(tmp.x / length, tmp.y / length, tmp.z / length);
 }
+
+// 콘솔 스크롤링
+void ClearConsole()
+{
+#ifdef _WIN32
+	system("cls");
+#else
+	system("clear");
+#endif
+}

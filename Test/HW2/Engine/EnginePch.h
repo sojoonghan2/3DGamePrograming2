@@ -16,6 +16,8 @@
 #include <algorithm>
 #include <locale>
 #include <codecvt>
+#include <chrono>
+#include <thread>
 using namespace std;
 
 #include <filesystem>
@@ -195,3 +197,5 @@ wstring s2ws(const string& s);
 string ws2s(const wstring& s);
 
 Vec3 Normalize(Vec3 tmp);
+
+void ClearConsole();

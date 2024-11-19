@@ -97,18 +97,18 @@ void TestPlayerScript::MouseInput()
 	}
 }
 
+
 void TestPlayerScript::CollisionTerrain()
 {
-	if (GetTransform()->GetLocalPosition().y <= _terrain->GetTerrain()->GetHeight(GetTransform()->GetLocalPosition().x,
-		GetTransform()->GetLocalPosition().z))
-	{
-		std::cout << "first: " << GetTransform()->GetLocalPosition().y << "\n";
-		std::cout << "second: " << _terrain->GetTerrain()->GetHeight(GetTransform()->GetLocalPosition().x, GetTransform()->GetLocalPosition().z) << "\n";
-		std::cout << "터레인 충돌 발생\n";
-	}
-
+	ClearConsole();
 	// 하이트값 출력 코드
-	std::cout << _terrain->GetTerrain()->GetHeight(GetTransform()->GetLocalPosition().x, GetTransform()->GetLocalPosition().z) << "\n";
+	std::cout << "***********************\n";
+	std::cout << "xPos: " << GetTransform()->GetLocalPosition().x << "\n";
+	std::cout << "zPos: " << GetTransform()->GetLocalPosition().z << "\n";
+	std::cout << "Height: " << _terrain->GetTerrain()->GetHeight(
+		GetTransform()->GetLocalPosition().x,
+		GetTransform()->GetLocalPosition().z) << "\n";
+	std::cout << "***********************\n";
 }
 
 void TestPlayerScript::AvoidObstacles()
