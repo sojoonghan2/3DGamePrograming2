@@ -199,7 +199,24 @@ void Texture::CreateFromResource(ComPtr<ID3D12Resource> tex2D)
 	}
 }
 
-float Texture::GetPixelValue(int x, int y) const
+float Texture::GetPixelValue(int fx, int fz) const
 {
-	return 0;
+	const DirectX::Image* image = _image.GetImages();
+	if (!image || fx < 0 || fz < 0 || fx >= static_cast<int>(_image.GetMetadata().width) || fz >= static_cast<int>(_image.GetMetadata().height));
+
+	int x = (int)fx;
+	int z = (int)fz;
+	float fxPercent = fx - x;
+	float fzPercent = fz - z;
+
+	// TODO: 임시로 0으로 박음
+	float fBottomLeft = 0;
+	float fBottomRight = 0;
+	float fTopLeft = 0;
+	float fTopRight = 0;
+	
+	float fTopHeight = fTopLeft * (1 - fxPercent) + fTopRight * fxPercent;
+	float fBottomHeight = fBottomLeft * (1 - fxPercent) + fBottomRight * fxPercent;
+	float fHeight = fBottomHeight * (1 - fzPercent) + fTopHeight * fzPercent;
+	return(fHeight);
 }

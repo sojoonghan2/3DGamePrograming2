@@ -61,5 +61,5 @@ void Terrain::FinalUpdate()
 
 float Terrain::GetHeight(float x, float z)
 {
-	return 0;
+	return(_heightMap->GetPixelValue(x, z)); // * 스케일 곱하기?
 }
