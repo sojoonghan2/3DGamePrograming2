@@ -199,24 +199,26 @@ void Texture::CreateFromResource(ComPtr<ID3D12Resource> tex2D)
 	}
 }
 
-float Texture::GetPixelValue(int fx, int fz) const
+Vec4 Texture::GetPixel(uint32 x, uint32 y) const
 {
-	const DirectX::Image* image = _image.GetImages();
-	if (!image || fx < 0 || fz < 0 || fx >= static_cast<int>(_image.GetMetadata().width) || fz >= static_cast<int>(_image.GetMetadata().height));
+	Vec4 color = Vec4(0, 0, 0, 0);
 
-	int x = (int)fx;
-	int z = (int)fz;
-	float fxPercent = fx - x;
-	float fzPercent = fz - z;
+	if (!_image.GetPixels()) // 데이터가 비어있으면 초기값 반환
+        return color;
 
-	// TODO: 임시로 0으로 박음
-	float fBottomLeft = 0;
-	float fBottomRight = 0;
-	float fTopLeft = 0;
-	float fTopRight = 0;
-	
-	float fTopHeight = fTopLeft * (1 - fxPercent) + fTopRight * fxPercent;
-	float fBottomHeight = fBottomLeft * (1 - fxPercent) + fBottomRight * fxPercent;
-	float fHeight = fBottomHeight * (1 - fzPercent) + fTopHeight * fzPercent;
-	return(fHeight);
+	uint32 width = _image.GetMetadata().width;
+	uint32 height = _image.GetMetadata().height;
+
+	if (x < 0 || x >= width || y < 0 || y >= height)
+		return color;
+
+	uint8* pixels = _image.GetPixels();
+	uint32 index = (y * width + x) * 4;
+
+	color.x = pixels[index + 0] / 255.0f;
+	color.y = pixels[index + 1] / 255.0f;
+	color.z = pixels[index + 2] / 255.0f;
+	color.w = pixels[index + 3] / 255.0f;
+
+	return color;
 }

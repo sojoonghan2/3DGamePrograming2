@@ -28,7 +28,7 @@ public:
 
 	float GetWidth() { return static_cast<float>(_desc.Width); }
 	float GetHeight() { return static_cast<float>(_desc.Height); }
-	float GetPixelValue(int x, int z) const;
+	Vec4 GetPixel(uint32 x, uint32 z) const;
 
 public:
 	ScratchImage			 		_image;

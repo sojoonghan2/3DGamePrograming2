@@ -27,7 +27,7 @@ void Terrain::Init(int32 sizeX, int32 sizeZ)
 	_material->SetInt(2, _sizeZ);
 	_material->SetFloat(0, _maxTesselation);
 
-	_heightMap = GET_SINGLE(Resources)->Load<Texture>(L"HeightMap", L"..\\Resources\\Texture\\Terrain\\height1.png");
+	_heightMap = GET_SINGLE(Resources)->Load<Texture>(L"HeightMap", L"..\\Resources\\Texture\\Terrain\\height1.jpg");
 	if (_heightMap)
 	{
 		_heightMapWidth = static_cast<int>(_heightMap->GetWidth());
@@ -59,7 +59,26 @@ void Terrain::FinalUpdate()
 	_material->SetVec4(0, Vec4(pos.x, pos.y, pos.z, 0));
 }
 
-float Terrain::GetHeight(float x, float z)
+float Terrain::GetHeight(float x, float z) const
 {
-	return(_heightMap->GetPixelValue(x, z)); // * 스케일 곱하기?
+	if (!_heightMap)
+		return 0.0f;
+
+	// 높이 맵의 크기
+	int32 width = _heightMap->GetWidth();
+	int32 height = _heightMap->GetHeight();
+
+	// 텍스처 좌표로 변환
+	int32 texX = static_cast<int32>(x * width / (_sizeX * 50));
+	int32 texZ = static_cast<int32>(height - (z * height / (_sizeZ * 50)));
+
+	// 텍스처 좌표가 유효한지 확인
+	if (texX < 0 || texX >= width || texZ < 0 || texZ >= height)
+		return 0.0f;
+
+	// 높이 맵에서 높이 값을 가져옴
+	auto heightValue = _heightMap->GetPixel(texX, texZ).x;
+
+	// 높이 값을 실제 높이로 변환
+	return heightValue * 500.0f;
 }

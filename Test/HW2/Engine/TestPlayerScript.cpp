@@ -30,23 +30,9 @@ void TestPlayerScript::LateUpdate()
 	MouseInput();
 	CollisionTerrain();
 
-	//std::cout << GetTransform()->GetLocalPosition().x << ", " << GetTransform()->GetLocalPosition().y << ", " << GetTransform()->GetLocalPosition().z << "\n";
-
 	if (PlayerCollision())
 	{
-		AvoidObstacles();
-	}
-
-	if (GetGameObject()->GetTransform()->GetLocalPosition().y < 100)
-	{
-		// 현재 위치를 가져옴
-		Vec3 pos = GetGameObject()->GetTransform()->GetLocalPosition();
-
-		// y 위치를 100으로 설정
-		pos.y = 100.0f;
-
-		// 변경된 위치를 다시 설정
-		GetGameObject()->GetTransform()->SetLocalPosition(pos);
+		//AvoidObstacles();
 	}
 }
 
@@ -104,11 +90,30 @@ void TestPlayerScript::CollisionTerrain()
 	// 하이트값 출력 코드
 	std::cout << "***********************\n";
 	std::cout << "xPos: " << GetTransform()->GetLocalPosition().x << "\n";
+	std::cout << "yPos: " << GetTransform()->GetLocalPosition().y << "\n";
 	std::cout << "zPos: " << GetTransform()->GetLocalPosition().z << "\n";
 	std::cout << "Height: " << _terrain->GetTerrain()->GetHeight(
 		GetTransform()->GetLocalPosition().x,
 		GetTransform()->GetLocalPosition().z) << "\n";
 	std::cout << "***********************\n";
+
+	float x = GetTransform()->GetLocalPosition().x;
+	float z = GetTransform()->GetLocalPosition().z;
+
+	// 터레인 높이 계산
+	float terrainHeight = _terrain->GetTerrain()->GetHeight(x, z) - 200;
+
+	// 현재 객체의 위치
+	Vec3 currentPosition = GetTransform()->GetLocalPosition();
+
+	// 충돌 판정
+	if (currentPosition.y < terrainHeight)
+	{
+		// 터레인 위로 위치 수정
+		currentPosition.y = terrainHeight;
+		GetTransform()->SetLocalPosition(currentPosition);
+	}
+
 }
 
 void TestPlayerScript::AvoidObstacles()
