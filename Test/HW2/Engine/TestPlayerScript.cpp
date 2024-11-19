@@ -30,9 +30,10 @@ void TestPlayerScript::LateUpdate()
 	MouseInput();
 	CollisionTerrain();
 
+	// 자동 회피
 	if (PlayerCollision())
 	{
-		AvoidObstacles();
+		//AvoidObstacles();
 	}
 }
 
@@ -86,17 +87,6 @@ void TestPlayerScript::MouseInput()
 
 void TestPlayerScript::CollisionTerrain()
 {
-	ClearConsole();
-	// 하이트값 출력 코드
-	std::cout << "***********************\n";
-	std::cout << "xPos: " << GetTransform()->GetLocalPosition().x << "\n";
-	std::cout << "yPos: " << GetTransform()->GetLocalPosition().y << "\n";
-	std::cout << "zPos: " << GetTransform()->GetLocalPosition().z << "\n";
-	std::cout << "Height: " << _terrain->GetTerrain()->GetHeight(
-		GetTransform()->GetLocalPosition().x,
-		GetTransform()->GetLocalPosition().z) << "\n";
-	std::cout << "***********************\n";
-
 	float x = GetTransform()->GetLocalPosition().x;
 	float z = GetTransform()->GetLocalPosition().z;
 
@@ -120,7 +110,7 @@ void TestPlayerScript::AvoidObstacles()
 {
 	Vec3 forward = Normalize(GetTransform()->GetLook());
 	// Y축을 약간 올려 회피할 각도 설정
-	Vec3 upwardAdjustment = Vec3(0.0f, 0.001f, 0.0f);
+	Vec3 upwardAdjustment = Vec3(0.0f, 0.01f, 0.0f);
 	// 위로 미세 조정된 새로운 방향
 	Vec3 newLookDirection = Normalize(forward + upwardAdjustment); 
 
@@ -142,8 +132,8 @@ bool TestPlayerScript::PlayerCollision()
 		auto is_collision = GET_SINGLE(SceneManager)->Collition(GetGameObject(), Objects[i]);
 		if (is_collision)
 		{
-			std::cout << "플레이어 충돌 발생: ";
-			std::wcout << objectName << "\n";
+			//std::cout << "플레이어 충돌 발생: ";
+			//std::wcout << objectName << "\n";
 			return true;
 		}
 	}

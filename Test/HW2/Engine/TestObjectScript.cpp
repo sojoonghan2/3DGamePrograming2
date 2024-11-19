@@ -56,8 +56,8 @@ void TestObjectScript::LateUpdate()
                     if (targetObject && targetObject->GetParticleSystem())
                     {
                         targetObject->GetParticleSystem()->ParticleStart();
-                        std::cout << "오브젝트 충돌 발생: ";
-                        std::wcout << particleName << std::endl;
+                        //std::cout << "오브젝트 충돌 발생: ";
+                        //std::wcout << particleName << std::endl;
                     }
                 }
                 break;  // 충돌이 발생하면 더 이상 검사하지 않음

@@ -9,7 +9,7 @@
 #include "SceneManager.h"
 
 float TestBulletScript::s_lastFireTime = 0.f;
-const float TestBulletScript::s_fireInterval = 2.f; // 1초 간격으로 발사
+const float TestBulletScript::s_fireInterval = 5.f; // 간격으로 발사
 int32 TestBulletScript::s_currentBulletIndex = 0;
 
 TestBulletScript::TestBulletScript()
@@ -67,6 +67,7 @@ void TestBulletScript::KeyboardInput()
             _parent = GetTransform()->GetParent().lock();
             if (_parent) _parentLook = _parent->GetLook();
             GetTransform()->RemoveParent();
+            GetTransform()->SetLocalPosition(0, 0, 0);
             Vec3 pos = _parent ? _parent->GetLocalPosition() : GetTransform()->GetLocalPosition();
             GetTransform()->SetLocalPosition(pos);
         }

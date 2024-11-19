@@ -119,7 +119,7 @@ shared_ptr<GameObject> SceneManager::Pick(int32 screenX, int32 screenY)
 			
 		}
 	}
-	if (picked) std::cout << "Pick!: " << picked->GetID() << "\n";
+	//if (picked) std::cout << "Pick!: " << picked->GetID() << "\n";
 	return picked;
 }
 
@@ -237,7 +237,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			bullet->SetName(bulletName);
 			bullet->AddComponent(make_shared<Transform>());
 			bullet->AddComponent(make_shared<TestBulletScript>());
-			bullet->SetCheckFrustum(false);
+			bullet->SetCheckFrustum(true);
 			bullet->GetTransform()->SetParent(mainObject->GetTransform());
 			bullet->GetTransform()->SetLocalPosition(Vec3(0.f, 100000000.f, 0.f));
 			bullet->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
@@ -300,7 +300,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region Object & Particle
 	{
-		for (int i{}; i < 30; ++i)
+		for (int i{}; i < 10; ++i)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			wstring objectName = L"OBJ" + to_wstring(i);
@@ -308,9 +308,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetCheckFrustum(true);
 
-			float randxPos = GetRandomFloat(0, 3000);
+			float randxPos = GetRandomFloat(500, 2500);
 			float randyPos = GetRandomFloat(50, 500);
-			float randzPos = GetRandomFloat(0, 3000);
+			float randzPos = GetRandomFloat(500, 2500);
 
 			obj->GetTransform()->SetLocalPosition(Vec3(randxPos, randyPos, randzPos));
 			obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
@@ -356,7 +356,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->GetTransform()->SetLocalPosition(Vec3(0.f, -200.f, 0.f));
 		obj->SetStatic(true);
 		obj->GetTerrain()->Init(64, 64);
-		obj->SetCheckFrustum(false);
+		obj->SetCheckFrustum(true);
 		scene->AddGameObject(obj);
 
 		GET_SINGLE(BillboardManager)->Init(100);

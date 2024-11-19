@@ -35,6 +35,13 @@ public:
 	}
 
 	void SetLocalPosition(const Vec3& position) { _localPosition = position; }
+	void SetLocalPosition(float x, float y, float z) {
+		Vec3 vec;
+		vec.x = x;
+		vec.y = y;
+		vec.z = z;
+		_localPosition = vec;
+	}
 	void SetLocalRotation(const Vec3& rotation) { _localRotation = rotation; }
 	void SetLocalRevolution(const Vec3& rotation) { _localRevolution = rotation; }
 	void SetLocalScale(const Vec3& scale) { _localScale = scale; }
