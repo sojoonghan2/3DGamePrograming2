@@ -80,5 +80,5 @@ float Terrain::GetHeight(float x, float z) const
 	auto heightValue = _heightMap->GetPixel(texX, texZ).x;
 
 	// 높이 값을 실제 높이로 변환
-	return heightValue * 500.0f;
+	return heightValue * 250.f;
 }

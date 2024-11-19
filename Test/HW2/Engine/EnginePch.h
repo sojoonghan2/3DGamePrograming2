@@ -18,6 +18,7 @@
 #include <codecvt>
 #include <chrono>
 #include <thread>
+#include <random>
 using namespace std;
 
 #include <filesystem>
@@ -199,3 +200,5 @@ string ws2s(const wstring& s);
 Vec3 Normalize(Vec3 tmp);
 
 void ClearConsole();
+
+float GetRandomFloat(float min, float max);

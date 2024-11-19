@@ -32,7 +32,7 @@ void TestPlayerScript::LateUpdate()
 
 	if (PlayerCollision())
 	{
-		//AvoidObstacles();
+		AvoidObstacles();
 	}
 }
 

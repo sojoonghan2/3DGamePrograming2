@@ -300,14 +300,19 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region Object & Particle
 	{
-		for (int i{}; i < 10; ++i)
+		for (int i{}; i < 30; ++i)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			wstring objectName = L"OBJ" + to_wstring(i);
 			obj->SetName(objectName);
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetCheckFrustum(true);
-			obj->GetTransform()->SetLocalPosition(Vec3(100.f + i * 200.f, 200.f, 800.f));
+
+			float randxPos = GetRandomFloat(0, 3000);
+			float randyPos = GetRandomFloat(50, 500);
+			float randzPos = GetRandomFloat(0, 3000);
+
+			obj->GetTransform()->SetLocalPosition(Vec3(randxPos, randyPos, randzPos));
 			obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
 			obj->AddComponent(make_shared<TestObjectScript>());
 			obj->SetStatic(true);
@@ -340,7 +345,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
-#pragma region Terrain
+#pragma region Terrain & Billboard
 	{
 		shared_ptr<GameObject> obj = make_shared<GameObject>();
 		obj->SetName(L"Terrain");
@@ -353,29 +358,28 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->GetTerrain()->Init(64, 64);
 		obj->SetCheckFrustum(false);
 		scene->AddGameObject(obj);
-	}
-#pragma endregion
 
-#pragma region Billboard
-	{
 		GET_SINGLE(BillboardManager)->Init(100);
 
 		shared_ptr<Mesh> pointMesh = GET_SINGLE(Resources)->LoadPointMesh();
 		shared_ptr<Material> billboardMaterial = GET_SINGLE(Resources)->Get<Material>(L"Billboard");
 
-		// 현재는 최대 30송이밖에 안심어짐
 		for (int i = 0; i < 100; ++i)
 		{
 			shared_ptr<GameObject> billboard = make_shared<GameObject>();
-			wstring billboardName = L"Billboard" + to_wstring(i);
+			wstring billboardName = L"BillboardFlower" + to_wstring(i);
 			billboard->SetName(billboardName);
 			billboard->AddComponent(make_shared<Transform>());
 			billboard->SetCheckFrustum(true);
 			billboard->SetStatic(true);
 
+			float randxPos = GetRandomFloat(0, 3000);
+			float randzPos = GetRandomFloat(0, 3000);
+
 			// Transform 설정
-			billboard->GetTransform()->SetLocalPosition(Vec3(500.f + i * 10.f, 100.f, 500.f));
-			billboard->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			billboard->GetTransform()->SetLocalPosition(Vec3(randxPos,
+				obj->GetTerrain()->GetHeight(randxPos, randzPos) - 200.f, randzPos));
+			billboard->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
 
 			// MeshRenderer 설정
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
@@ -386,8 +390,10 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			// BillboardParams 생성
 			BillboardParams params;
 			params.position = billboard->GetTransform()->GetWorldPosition();
-			params.scale = billboard->GetTransform()->GetLocalScale().x; // 균일 스케일 가정
-			params.color = Vec4(1.f, 1.f, 1.f, 1.f); // 기본 흰색
+			// 균일 스케일 가정
+			params.scale = billboard->GetTransform()->GetLocalScale().x;
+			// 기본 흰색
+			params.color = Vec4(1.f, 1.f, 1.f, 1.f);
 
 			// BillboardManager에 데이터 추가
 			GET_SINGLE(BillboardManager)->AddParam(meshRenderer->GetInstanceID(), params);
