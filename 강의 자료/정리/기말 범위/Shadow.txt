@@ -1,0 +1,7 @@
+▶ 그림자
+그림자는 시각적 공간적 현실감을 느낄 수 있도록 함
+
+▶ 원형 그림자
+D3D12_BLEND_ZERO
+D3D12_BLEND_INV_SRC_COLOR
+D3D12_BLEND_OP_ADD
