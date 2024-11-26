@@ -404,10 +404,10 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
-#pragma regin StartBillboard
+#pragma region StartBillboard
 	GET_SINGLE(BillboardManager)->Init(50);
 
-	shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Flower", L"..\\Resources\\Texture\\Star.png");
+	shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Star", L"..\\Resources\\Texture\\Star.png");
 	shared_ptr<Mesh> pointMesh = GET_SINGLE(Resources)->LoadPointMesh();
 	shared_ptr<Material> billboardMaterial = GET_SINGLE(Resources)->Get<Material>(L"Billboard");
 
@@ -420,8 +420,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		billboard->SetCheckFrustum(true);
 		billboard->SetStatic(true);
 
-		float randxPos = GetRandomFloat(0, 3000);
-		float randzPos = GetRandomFloat(0, 3000);
+		float randxPos = GetRandomFloat(-2000, 5000);
+		float randzPos = GetRandomFloat(-2000, 5000);
 
 		// MeshRenderer 설정
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
@@ -433,7 +433,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		billboard->AddComponent(meshRenderer);
 
 		// Transform 설정
-		billboard->GetTransform()->SetLocalPosition(Vec3(randxPos, 500, randzPos));
+		billboard->GetTransform()->SetLocalPosition(Vec3(randxPos, 1000, randzPos));
 		billboard->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
 
 		// BillboardParams 생성
