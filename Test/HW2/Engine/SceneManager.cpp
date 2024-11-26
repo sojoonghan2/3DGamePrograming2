@@ -345,7 +345,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
-#pragma region Terrain & Billboard
+#pragma region Terrain & FlowerBillboard
 	{
 		shared_ptr<GameObject> obj = make_shared<GameObject>();
 		obj->SetName(L"Terrain");
@@ -359,15 +359,15 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->SetCheckFrustum(true);
 		scene->AddGameObject(obj);
 
-		GET_SINGLE(BillboardManager)->Init(100);
+		GET_SINGLE(BillboardManager)->Init(50);
 
 		shared_ptr<Mesh> pointMesh = GET_SINGLE(Resources)->LoadPointMesh();
 		shared_ptr<Material> billboardMaterial = GET_SINGLE(Resources)->Get<Material>(L"Billboard");
 
-		for (int i = 0; i < 100; ++i)
+		for (int i = 0; i < 50; ++i)
 		{
 			shared_ptr<GameObject> billboard = make_shared<GameObject>();
-			wstring billboardName = L"BillboardFlower" + to_wstring(i);
+			wstring billboardName = L"FlowerBillboard" + to_wstring(i);
 			billboard->SetName(billboardName);
 			billboard->AddComponent(make_shared<Transform>());
 			billboard->SetCheckFrustum(true);
@@ -401,6 +401,54 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			// Scene에 GameObject 추가
 			scene->AddGameObject(billboard);
 		}
+	}
+#pragma endregion
+
+#pragma regin StartBillboard
+	GET_SINGLE(BillboardManager)->Init(50);
+
+	shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Flower", L"..\\Resources\\Texture\\Star.png");
+	shared_ptr<Mesh> pointMesh = GET_SINGLE(Resources)->LoadPointMesh();
+	shared_ptr<Material> billboardMaterial = GET_SINGLE(Resources)->Get<Material>(L"Billboard");
+
+	for (int i = 0; i < 50; ++i)
+	{
+		shared_ptr<GameObject> billboard = make_shared<GameObject>();
+		wstring billboardName = L"StarBillboard" + to_wstring(i);
+		billboard->SetName(billboardName);
+		billboard->AddComponent(make_shared<Transform>());
+		billboard->SetCheckFrustum(true);
+		billboard->SetStatic(true);
+
+		float randxPos = GetRandomFloat(0, 3000);
+		float randzPos = GetRandomFloat(0, 3000);
+
+		// MeshRenderer 설정
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		meshRenderer->SetMesh(pointMesh);
+		auto newMaterial = billboardMaterial->Clone();
+		newMaterial->SetTexture(0, texture);
+
+		meshRenderer->SetMaterial(newMaterial);
+		billboard->AddComponent(meshRenderer);
+
+		// Transform 설정
+		billboard->GetTransform()->SetLocalPosition(Vec3(randxPos, 500, randzPos));
+		billboard->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
+
+		// BillboardParams 생성
+		BillboardParams params;
+		params.position = billboard->GetTransform()->GetWorldPosition();
+		// 균일 스케일 가정
+		params.scale = billboard->GetTransform()->GetLocalScale().x;
+		// 기본 흰색
+		params.color = Vec4(1.f, 1.f, 1.f, 1.f);
+
+		// BillboardManager에 데이터 추가
+		GET_SINGLE(BillboardManager)->AddParam(meshRenderer->GetInstanceID(), params);
+
+		// Scene에 GameObject 추가
+		scene->AddGameObject(billboard);
 	}
 #pragma endregion
 
