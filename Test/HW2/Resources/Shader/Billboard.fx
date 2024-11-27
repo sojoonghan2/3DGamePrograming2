@@ -1,6 +1,7 @@
 #ifndef _BILLBOARD_FX_
 #define _BILLBOARD_FX_
 #include "params.fx"
+#include "utils.fx"
 
 struct VS_IN
 {
@@ -23,17 +24,18 @@ struct VS_OUT
 
 VS_OUT VS_Main(VS_IN input)
 {
-    VS_OUT output = (VS_OUT) 0;
+    VS_OUT output;
 
-    // 인스턴싱 활성화 여부에 따라 월드 좌표 계산
-    if (g_int_0 == 1)
-    {
-        output.posW = mul(float4(input.pos, 1.0f), input.matWorld);
-    }
-    else
-    {
-        output.posW = mul(float4(input.pos, 1.0f), g_matWorld);
-    }
+    // instanceID 기반 랜덤 위치 생성(적용이 안되고 있음)
+    float x = Rand(input.instanceID * 13.0) * 7000.0 - 2000.0; // X 범위: -2000 ~ 5000
+    float z = Rand(input.instanceID * 17.0) * 7000.0 - 2000.0; // Z 범위: -2000 ~ 5000
+    float3 randomOffset = float3(x, 1000.0, z);
+
+    // 입력 정점 위치에 랜덤 오프셋 적용
+    float3 worldPos = mul(float4(input.pos + randomOffset, 1.0), input.matWorld).xyz;
+
+    // 월드 좌표를 posW에 저장
+    output.posW = float4(worldPos, 1.0);
 
     // UV 전달
     output.uv = input.uv;

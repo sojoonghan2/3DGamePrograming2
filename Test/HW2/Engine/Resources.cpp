@@ -590,6 +590,32 @@ void Resources::CreateDefaultShader()
 		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\terrain.fx", info, arg);
 		Add<Shader>(L"Terrain", shader);
 	}
+
+	// Water
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::FORWARD,
+			RASTERIZER_TYPE::CULL_BACK,
+			DEPTH_STENCIL_TYPE::LESS_EQUAL,
+			BLEND_TYPE::ALPHA_BLEND,
+			D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST
+		};
+
+		ShaderArg arg =
+		{
+			"VS_Main",
+			"",
+			"",
+			"",
+			"PS_Main",
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\water.fx", info, arg);
+		Add<Shader>(L"Water", shader);
+	}
+
 }
 
 void Resources::CreateDefaultMaterial()
@@ -714,4 +740,26 @@ void Resources::CreateDefaultMaterial()
 		material->SetTexture(0, texture);
 		Add<Material>(L"Terrain", material);
 	}
+
+	// Water
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Water");
+
+		shared_ptr<Texture> diffuseTexture = GET_SINGLE(Resources)->Load<Texture>(L"WaterDiffuse", L"..\\Resources\\Texture\\water.jpg");
+		//shared_ptr<Texture> normalTexture = GET_SINGLE(Resources)->Load<Texture>(L"WaterNormal", L"..\\Resources\\Texture\\water_normal.png");
+
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, diffuseTexture);
+		//material->SetTexture(1, normalTexture);
+
+		// 임시
+		// Transparency 기본값 (1.0f = 불투명)
+		material->SetFloat(0, 1.0f); 
+		// UV 스크롤 속도 기본값
+		material->SetFloat(1, 0.05f);
+
+		Add<Material>(L"Water", material);
+	}
+
 }

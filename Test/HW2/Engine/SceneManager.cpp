@@ -405,51 +405,75 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region StartBillboard
-	GET_SINGLE(BillboardManager)->Init(50);
-
-	shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Star", L"..\\Resources\\Texture\\Star.png");
-	shared_ptr<Mesh> pointMesh = GET_SINGLE(Resources)->LoadPointMesh();
-	shared_ptr<Material> billboardMaterial = GET_SINGLE(Resources)->Get<Material>(L"Billboard");
-
-	for (int i = 0; i < 50; ++i)
 	{
-		shared_ptr<GameObject> billboard = make_shared<GameObject>();
-		wstring billboardName = L"StarBillboard" + to_wstring(i);
-		billboard->SetName(billboardName);
-		billboard->AddComponent(make_shared<Transform>());
-		billboard->SetCheckFrustum(true);
-		billboard->SetStatic(true);
+		GET_SINGLE(BillboardManager)->Init(50);
 
-		float randxPos = GetRandomFloat(-2000, 5000);
-		float randzPos = GetRandomFloat(-2000, 5000);
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Star", L"..\\Resources\\Texture\\Star.png");
+		shared_ptr<Mesh> pointMesh = GET_SINGLE(Resources)->LoadPointMesh();
+		shared_ptr<Material> billboardMaterial = GET_SINGLE(Resources)->Get<Material>(L"Billboard");
 
-		// MeshRenderer 설정
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		meshRenderer->SetMesh(pointMesh);
-		auto newMaterial = billboardMaterial->Clone();
-		newMaterial->SetTexture(0, texture);
+		for (int i = 0; i < 50; ++i)
+		{
+			shared_ptr<GameObject> billboard = make_shared<GameObject>();
+			wstring billboardName = L"StarBillboard" + to_wstring(i);
+			billboard->SetName(billboardName);
+			billboard->AddComponent(make_shared<Transform>());
+			billboard->SetCheckFrustum(true);
+			billboard->SetStatic(true);
 
-		meshRenderer->SetMaterial(newMaterial);
-		billboard->AddComponent(meshRenderer);
+			// 해당 랜덤 계산을 CPU 말고 GPU에서 시키고 싶음
+			float randxPos = GetRandomFloat(-2000, 5000);
+			float randzPos = GetRandomFloat(-2000, 5000);
 
-		// Transform 설정
-		billboard->GetTransform()->SetLocalPosition(Vec3(randxPos, 1000, randzPos));
-		billboard->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
+			// MeshRenderer 설정
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			meshRenderer->SetMesh(pointMesh);
+			auto newMaterial = billboardMaterial->Clone();
+			newMaterial->SetTexture(0, texture);
 
-		// BillboardParams 생성
-		BillboardParams params;
-		params.position = billboard->GetTransform()->GetWorldPosition();
-		// 균일 스케일 가정
-		params.scale = billboard->GetTransform()->GetLocalScale().x;
-		// 기본 흰색
-		params.color = Vec4(1.f, 1.f, 1.f, 1.f);
+			meshRenderer->SetMaterial(newMaterial);
+			billboard->AddComponent(meshRenderer);
 
-		// BillboardManager에 데이터 추가
-		GET_SINGLE(BillboardManager)->AddParam(meshRenderer->GetInstanceID(), params);
+			// Transform 설정
+			billboard->GetTransform()->SetLocalPosition(Vec3(randxPos, 1000, randzPos));
+			billboard->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
 
-		// Scene에 GameObject 추가
-		scene->AddGameObject(billboard);
+			// BillboardParams 생성
+			BillboardParams params;
+			params.position = billboard->GetTransform()->GetWorldPosition();
+			// 균일 스케일 가정
+			params.scale = billboard->GetTransform()->GetLocalScale().x;
+			// 기본 흰색
+			params.color = Vec4(1.f, 1.f, 1.f, 1.f);
+
+			// BillboardManager에 데이터 추가
+			GET_SINGLE(BillboardManager)->AddParam(meshRenderer->GetInstanceID(), params);
+
+			// Scene에 GameObject 추가
+			scene->AddGameObject(billboard);
+		}
 	}
+#pragma endregion
+
+#pragma region Water
+	//{
+	//	shared_ptr<GameObject> water = make_shared<GameObject>();
+	//	water->SetName(L"Water");
+	//	water->AddComponent(make_shared<Transform>());
+
+	//	// Transform 설정
+	//	water->GetTransform()->SetLocalPosition(Vec3(1000.f, 70.f, 1000.f));
+	//	water->GetTransform()->SetLocalScale(Vec3(200.f, 200.f, 200.f));
+
+	//	// MeshRenderer 설정
+	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//	meshRenderer->SetMesh(GET_SINGLE(Resources)->LoadRectangleMesh());
+	//	meshRenderer->SetMaterial(GET_SINGLE(Resources)->Get<Material>(L"Water"));
+	//	water->AddComponent(meshRenderer);
+
+	//	// 씬에 추가
+	//	scene->AddGameObject(water);
+	//}
 #pragma endregion
 
 #pragma region UI_Test
