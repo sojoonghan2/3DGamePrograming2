@@ -463,8 +463,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		water->AddComponent(make_shared<Transform>());
 
 		// Transform 설정
-		water->GetTransform()->SetLocalPosition(Vec3(1000.f, 70.f, 1000.f));
-		water->GetTransform()->SetLocalScale(Vec3(200.f, 200.f, 200.f));
+		water->GetTransform()->SetLocalPosition(Vec3(1500.f, -100.f, 1500.f));
+		water->GetTransform()->SetLocalScale(Vec3(3000.f, 3000.f, 3000.f));
+		water->GetTransform()->SetLocalRotation(Vec3(1.5708f, 0.f, 0.f));
 
 		// MeshRenderer 설정
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();

@@ -26,7 +26,7 @@ public:
 	}
 
 private:
-	float					_speed = 300.f;
+	float					_speed = 1000.f;
 	POINT					m_ptOldCursorPos;
 
 	shared_ptr<GameObject>	_terrain;
