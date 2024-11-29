@@ -18,6 +18,7 @@
 #include "TestCameraScript.h"
 #include "Resources.h"
 #include "ParticleSystem.h"
+#include "WaterSystem.h"
 #include "Terrain.h"
 #include "SphereCollider.h"
 #include "BoxCollider.h"
@@ -470,6 +471,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		meshRenderer->SetMesh(GET_SINGLE(Resources)->LoadRectangleMesh());
 		meshRenderer->SetMaterial(GET_SINGLE(Resources)->Get<Material>(L"Water"));
 		water->AddComponent(meshRenderer);
+
+		// WaterSystem 설정
+		water->AddComponent(make_shared<WaterSystem>());
 
 		// 씬에 추가
 		scene->AddGameObject(water);

@@ -11,6 +11,7 @@
 #include "ParticleSystem.h"
 #include "InstancingManager.h"
 #include "BillboardManager.h"
+#include "WaterSystem.h"
 
 Matrix Camera::S_MatView;
 Matrix Camera::S_MatProjection;

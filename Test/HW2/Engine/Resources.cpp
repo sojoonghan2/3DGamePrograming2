@@ -595,9 +595,13 @@ void Resources::CreateDefaultShader()
 	{
 		ShaderInfo info =
 		{
+			// 지연 렌더링
 			SHADER_TYPE::DEFERRED,
+			// 후면 컬링
 			RASTERIZER_TYPE::CULL_BACK,
+			// 다른 오브젝트 겹쳐도 렌더링
 			DEPTH_STENCIL_TYPE::LESS_EQUAL,
+			// 알파 블렌딩
 			BLEND_TYPE::ALPHA_BLEND,
 			D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST
 		};
