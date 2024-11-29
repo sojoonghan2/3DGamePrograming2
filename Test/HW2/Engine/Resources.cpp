@@ -595,7 +595,7 @@ void Resources::CreateDefaultShader()
 	{
 		ShaderInfo info =
 		{
-			SHADER_TYPE::FORWARD,
+			SHADER_TYPE::DEFERRED,
 			RASTERIZER_TYPE::CULL_BACK,
 			DEPTH_STENCIL_TYPE::LESS_EQUAL,
 			BLEND_TYPE::ALPHA_BLEND,
@@ -755,9 +755,9 @@ void Resources::CreateDefaultMaterial()
 
 		// 임시
 		// Transparency 기본값 (1.0f = 불투명)
-		material->SetFloat(0, 1.0f); 
+		//material->SetFloat(0, 1.0f); 
 		// UV 스크롤 속도 기본값
-		material->SetFloat(1, 0.05f);
+		//material->SetFloat(1, 0.05f);
 
 		Add<Material>(L"Water", material);
 	}

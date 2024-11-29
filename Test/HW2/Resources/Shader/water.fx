@@ -3,70 +3,88 @@
 
 #include "params.fx"
 
-// Water parameters
-cbuffer WATER_PARAMS : register(b3)
-{
-    float g_Time; // 시간 값
-    float g_ScrollSpeed; // 텍스처 스크롤 속도
-    float g_Transparency; // 물 투명도
-    float g_ReflectionStrength; // 반사 강도
-};
-
 struct VS_IN
 {
     float3 pos : POSITION;
     float2 uv : TEXCOORD;
+    float3 normal : NORMAL;
+    float3 tangent : TANGENT;
+
+    row_major matrix matWorld : W;
+    row_major matrix matWV : WV;
+    row_major matrix matWVP : WVP;
+    uint instanceID : SV_InstanceID;
 };
 
 struct VS_OUT
 {
     float4 pos : SV_Position;
     float2 uv : TEXCOORD;
-    float3 worldPos : POSITION;
+    float3 viewPos : POSITION;
+    float3 viewNormal : NORMAL;
+    float3 viewTangent : TANGENT;
+    float3 viewBinormal : BINORMAL;
 };
 
 VS_OUT VS_Main(VS_IN input)
 {
-    VS_OUT output;
-    float4 worldPos = mul(float4(input.pos, 1.0f), g_matWorld);
-    output.pos = mul(worldPos, g_matWVP);
-    output.uv = input.uv;
-    output.worldPos = worldPos.xyz;
+    VS_OUT output = (VS_OUT) 0;
+
+    if (g_int_0 == 1)
+    {
+        output.pos = mul(float4(input.pos, 1.f), input.matWVP);
+        output.uv = input.uv;
+
+        output.viewPos = mul(float4(input.pos, 1.f), input.matWV).xyz;
+        output.viewNormal = normalize(mul(float4(input.normal, 0.f), input.matWV).xyz);
+        output.viewTangent = normalize(mul(float4(input.tangent, 0.f), input.matWV).xyz);
+        output.viewBinormal = normalize(cross(output.viewTangent, output.viewNormal));
+    }
+    else
+    {
+        output.pos = mul(float4(input.pos, 1.f), g_matWVP);
+        output.uv = input.uv;
+
+        output.viewPos = mul(float4(input.pos, 1.f), g_matWV).xyz;
+        output.viewNormal = normalize(mul(float4(input.normal, 0.f), g_matWV).xyz);
+        output.viewTangent = normalize(mul(float4(input.tangent, 0.f), g_matWV).xyz);
+        output.viewBinormal = normalize(cross(output.viewTangent, output.viewNormal));
+    }
+
     return output;
 }
 
-float4 PS_Main(VS_OUT input) : SV_Target
+struct PS_OUT
 {
-    // UV 스크롤링
-    float2 uv = input.uv + float2(g_Time * g_ScrollSpeed, g_Time * g_ScrollSpeed);
+    float4 position : SV_Target0;
+    float4 normal : SV_Target1;
+    float4 color : SV_Target2;
+};
 
-    // 텍스처 샘플링
-    float4 color = g_tex_0.Sample(g_sam_0, uv); // Diffuse Map
-    float4 normal = g_tex_1.Sample(g_sam_0, uv); // Normal Map
-
-    // 반사 벡터 계산
-    float3 viewDir = normalize(input.worldPos - g_matViewInv._41_42_43);
-    float3 normalVector = normalize(normal.xyz * 2.0f - 1.0f); // 노멀 텍스처는 [-1, 1] 범위로 변환 필요
-    float3 reflection = reflect(viewDir, normalVector);
-
-    // 반사 효과 적용
-    float2 reflectionUV = reflection.xy * 0.5 + 0.5; // [0, 1] 범위로 매핑
-    float4 reflectionColor = g_tex_2.Sample(g_sam_0, reflectionUV); // Reflection Map
-
-    // 최종 색상
-    float4 finalColor = lerp(color, reflectionColor, g_ReflectionStrength);
-    finalColor.a *= g_Transparency;
-
-    return finalColor;
-}
-
-technique11 Render
+PS_OUT PS_Main(VS_OUT input)
 {
-    pass P0
+    PS_OUT output = (PS_OUT) 0;
+
+    float4 color = float4(1.f, 1.f, 1.f, 1.f);
+    if (g_tex_on_0 == 1)
+        color = g_tex_0.Sample(g_sam_0, input.uv);
+
+    float3 viewNormal = input.viewNormal;
+    if (g_tex_on_1 == 1)
     {
-        SetVertexShader(CompileShader(vs_5_0, VS_Main()));
-        SetPixelShader(CompileShader(ps_5_0, PS_Main()));
+        // [0,255] 범위에서 [0,1]로 변환
+        float3 tangentSpaceNormal = g_tex_1.Sample(g_sam_0, input.uv).xyz;
+        // [0,1] 범위에서 [-1,1]로 변환
+        tangentSpaceNormal = (tangentSpaceNormal - 0.5f) * 2.f;
+        float3x3 matTBN = { input.viewTangent, input.viewBinormal, input.viewNormal };
+        viewNormal = normalize(mul(tangentSpaceNormal, matTBN));
     }
+
+    output.position = float4(input.viewPos.xyz, 0.f);
+    output.normal = float4(viewNormal.xyz, 0.f);
+    output.color = color;
+
+    return output;
 }
 
 #endif

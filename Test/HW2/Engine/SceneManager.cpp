@@ -456,24 +456,24 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region Water
-	//{
-	//	shared_ptr<GameObject> water = make_shared<GameObject>();
-	//	water->SetName(L"Water");
-	//	water->AddComponent(make_shared<Transform>());
+	{
+		shared_ptr<GameObject> water = make_shared<GameObject>();
+		water->SetName(L"Water");
+		water->AddComponent(make_shared<Transform>());
 
-	//	// Transform 설정
-	//	water->GetTransform()->SetLocalPosition(Vec3(1000.f, 70.f, 1000.f));
-	//	water->GetTransform()->SetLocalScale(Vec3(200.f, 200.f, 200.f));
+		// Transform 설정
+		water->GetTransform()->SetLocalPosition(Vec3(1000.f, 70.f, 1000.f));
+		water->GetTransform()->SetLocalScale(Vec3(200.f, 200.f, 200.f));
 
-	//	// MeshRenderer 설정
-	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-	//	meshRenderer->SetMesh(GET_SINGLE(Resources)->LoadRectangleMesh());
-	//	meshRenderer->SetMaterial(GET_SINGLE(Resources)->Get<Material>(L"Water"));
-	//	water->AddComponent(meshRenderer);
+		// MeshRenderer 설정
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		meshRenderer->SetMesh(GET_SINGLE(Resources)->LoadRectangleMesh());
+		meshRenderer->SetMaterial(GET_SINGLE(Resources)->Get<Material>(L"Water"));
+		water->AddComponent(meshRenderer);
 
-	//	// 씬에 추가
-	//	scene->AddGameObject(water);
-	//}
+		// 씬에 추가
+		scene->AddGameObject(water);
+	}
 #pragma endregion
 
 #pragma region UI_Test
