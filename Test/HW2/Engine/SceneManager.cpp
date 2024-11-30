@@ -424,6 +424,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 			// 해당 랜덤 계산을 CPU 말고 GPU에서 시키고 싶음
 			float randxPos = GetRandomFloat(-2000, 5000);
+			float randyPos = GetRandomFloat(1000, 5000);
 			float randzPos = GetRandomFloat(-2000, 5000);
 
 			// MeshRenderer 설정
@@ -436,7 +437,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			billboard->AddComponent(meshRenderer);
 
 			// Transform 설정
-			billboard->GetTransform()->SetLocalPosition(Vec3(randxPos, 1000, randzPos));
+			billboard->GetTransform()->SetLocalPosition(Vec3(randxPos, randyPos, randzPos));
 			billboard->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
 
 			// BillboardParams 생성
