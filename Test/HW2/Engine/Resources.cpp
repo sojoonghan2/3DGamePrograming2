@@ -748,13 +748,11 @@ void Resources::CreateDefaultMaterial()
 	// Water
 	{
 		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Water");
-
 		shared_ptr<Texture> diffuseTexture = GET_SINGLE(Resources)->Load<Texture>(L"WaterDiffuse", L"..\\Resources\\Texture\\water.jpg");
 		
 		shared_ptr<Material> material = make_shared<Material>();
 		material->SetShader(shader);
 		material->SetTexture(0, diffuseTexture);
-
 
 		Add<Material>(L"Water", material);
 	}
