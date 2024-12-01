@@ -422,7 +422,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			billboard->SetCheckFrustum(true);
 			billboard->SetStatic(true);
 
-			// 해당 랜덤 계산을 CPU 말고 GPU에서 시키고 싶음
 			float randxPos = GetRandomFloat(-2000, 5000);
 			float randyPos = GetRandomFloat(1000, 5000);
 			float randzPos = GetRandomFloat(-2000, 5000);
