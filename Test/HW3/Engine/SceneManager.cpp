@@ -506,17 +506,17 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region Directional Light
 	{
-		shared_ptr<GameObject> light = make_shared<GameObject>();
-		light->AddComponent(make_shared<Transform>());
-		light->AddComponent(make_shared<Light>());
-		light->GetLight()->SetLightDirection(Vec3(0, -1, 1.f));
-		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
-		light->GetTransform()->SetParent(mainObject->GetTransform());
-		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
-		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
-		light->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));
+		shared_ptr<GameObject> dlight = make_shared<GameObject>();
+		dlight->AddComponent(make_shared<Transform>());
+		dlight->AddComponent(make_shared<Light>());
+		dlight->GetLight()->SetLightDirection(Vec3(0, -1, 1.f));
+		dlight->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
+		dlight->GetTransform()->SetParent(mainObject->GetTransform());
+		dlight->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
+		dlight->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
+		dlight->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));
 
-		scene->AddGameObject(light);
+		scene->AddGameObject(dlight);
 	}
 #pragma endregion
 
@@ -543,6 +543,31 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		title->AddComponent(meshRenderer);
 		scene->AddGameObject(title);
+	}
+#pragma endregion
+
+#pragma region
+	{
+		// 1. light 오브젝트 생성 
+		shared_ptr<GameObject> plight = make_shared<GameObject>();
+		plight->SetName(L"Point_Light");
+		plight->AddComponent(make_shared<Transform>());
+
+		// 2-1. light 컴포넌트 추가 및 속성 설정
+		plight->AddComponent(make_shared<Light>());
+		plight->GetLight()->SetLightType(LIGHT_TYPE::POINT_LIGHT);
+		plight->GetTransform()->SetParent(mainObject->GetTransform());
+
+		// 2-2. 점광원 특수 설정
+		plight->GetLight()->SetLightRange(1000.f);
+
+		// 3. 조명 색상 및 강도 설정
+		plight->GetLight()->SetDiffuse(Vec3(0.5f, 0.5f, 0.5f));
+		plight->GetLight()->SetAmbient(Vec3(0.5f, 0.5f, 0.5f));
+		plight->GetLight()->SetSpecular(Vec3(0.5f, 0.5f, 0.5f));
+
+		// 4. Scene에 추가
+		scene->AddGameObject(plight);
 	}
 #pragma endregion
 
