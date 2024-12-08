@@ -94,28 +94,39 @@ void Camera::SortShadowObject()
 
 	for (auto& gameObject : gameObjects)
 	{
+		// MeshRenderer가 없는 객체 제외
 		if (gameObject->GetMeshRenderer() == nullptr)
+		{
+		//std::wcout << L"Excluded: No MeshRenderer - " << gameObject->GetName() << std::endl;
 			continue;
+		}
 
+		// 정적인 객체 제외
 		if (gameObject->IsStatic())
+		{
+			//std::wcout << L"Excluded: Static object - " << gameObject->GetName() << std::endl;
 			continue;
+		}
 
-		if (IsCulled(gameObject->GetLayerIndex()))
-			continue;
-
+		// 프러스텀 컬링 적용
 		if (gameObject->GetCheckFrustum())
 		{
 			if (_frustum.ContainsSphere(
 				gameObject->GetTransform()->GetWorldPosition(),
 				gameObject->GetTransform()->GetBoundingSphereRadius()) == false)
 			{
+				//std::wcout << L"Excluded: Outside frustum - " << gameObject->GetName() << std::endl;
 				continue;
 			}
 		}
 
+		// 그림자 대상에 추가
+		// TODO: 헬리콥터와 행성이 포함되었다는 것을 확인한 상태, 근데 왜 그림자UI에 보이지 않는가?
 		_vecShadow.push_back(gameObject);
+		//std::wcout << L"Included in shadow rendering: " << gameObject->GetName() << std::endl;
 	}
 }
+
 
 void Camera::Render_Deferred()
 {

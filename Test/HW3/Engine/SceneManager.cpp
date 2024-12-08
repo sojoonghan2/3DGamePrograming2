@@ -186,6 +186,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
+#pragma region Main
 	shared_ptr<Scene> scene = make_shared<Scene>();
 
 	shared_ptr<GameObject> mainObject = make_shared<GameObject>();
@@ -197,6 +198,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	dynamic_pointer_cast<BoxCollider>(mainObject->GetCollider())->SetCenter(Vec3(0.f, 0.f, 0.f));
 	dynamic_pointer_cast<BoxCollider>(mainObject->GetCollider())->SetExtents(Vec3(200.f, 200.f, 200.f));
 	scene->AddGameObject(mainObject);
+#pragma endregion
 
 #pragma region FBX & Camera
 	{
@@ -209,6 +211,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->SetName(L"Helicopter");
 			gameObject->GetTransform()->SetParent(mainObject->GetTransform());
 			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(false);
 			gameObject->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
 			scene->AddGameObject(gameObject);
 		}
@@ -316,7 +319,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->GetTransform()->SetLocalPosition(Vec3(randxPos, randyPos, randzPos));
 			obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
 			obj->AddComponent(make_shared<TestObjectScript>());
-			obj->SetStatic(true);
+			obj->SetStatic(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
 				shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
@@ -482,26 +485,31 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region UI_Test
-	shared_ptr<GameObject> obj = make_shared<GameObject>();
-	obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-	obj->AddComponent(make_shared<Transform>());
-	obj->GetTransform()->SetLocalScale(Vec3(150.f, 150.f, 150.f));
-	obj->GetTransform()->SetLocalPosition(Vec3(-300.f, 200.f, 500.f));
-	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	for (int i{}; i < 2; ++i)
 	{
-		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-		meshRenderer->SetMesh(mesh);
+		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		obj->AddComponent(make_shared<Transform>());
+		obj->GetTransform()->SetLocalScale(Vec3(150.f, 150.f, 150.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-300.f + (i * 150 + 10 * i), 200.f, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Texture> texture{};
+			if(i == 0) { texture = GET_SINGLE(Resources)->Load<Texture>(L"PlayerUI", L"..\\Resources\\Texture\\PlayerUI.jpg"); }
+			else { texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SHADOW)->GetRTTexture(0); }
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		obj->AddComponent(meshRenderer);
+		scene->AddGameObject(obj);
 	}
-	{
-		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"PlayerUI", L"..\\Resources\\Texture\\PlayerUI.jpg");
-		shared_ptr<Material> material = make_shared<Material>();
-		material->SetShader(shader);
-		material->SetTexture(0, texture);
-		meshRenderer->SetMaterial(material);
-	}
-	obj->AddComponent(meshRenderer);
-	scene->AddGameObject(obj);
 #pragma endregion
 
 #pragma region Directional Light
@@ -545,31 +553,5 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		scene->AddGameObject(title);
 	}
 #pragma endregion
-
-#pragma region
-	{
-		// 1. light 오브젝트 생성 
-		shared_ptr<GameObject> plight = make_shared<GameObject>();
-		plight->SetName(L"Point_Light");
-		plight->AddComponent(make_shared<Transform>());
-
-		// 2-1. light 컴포넌트 추가 및 속성 설정
-		plight->AddComponent(make_shared<Light>());
-		plight->GetLight()->SetLightType(LIGHT_TYPE::POINT_LIGHT);
-		plight->GetTransform()->SetParent(mainObject->GetTransform());
-
-		// 2-2. 점광원 특수 설정
-		plight->GetLight()->SetLightRange(1000.f);
-
-		// 3. 조명 색상 및 강도 설정
-		plight->GetLight()->SetDiffuse(Vec3(0.5f, 0.5f, 0.5f));
-		plight->GetLight()->SetAmbient(Vec3(0.5f, 0.5f, 0.5f));
-		plight->GetLight()->SetSpecular(Vec3(0.5f, 0.5f, 0.5f));
-
-		// 4. Scene에 추가
-		scene->AddGameObject(plight);
-	}
-#pragma endregion
-
 	return scene;
 }
